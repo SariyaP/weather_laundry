@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'laundry.apps.LaundryConfig'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,11 +68,11 @@ ROOT_URLCONF = 'laundry.urls'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', cast=str),
-        'USER': config('USERNAME', cast=str),
-        'PASSWORD': config('PASSWORD', cast=str, default='password'),
-        'HOST': config('HOST', cast=str),
-        'PORT': config('PORT', cast=str, default='3306'),
+        'NAME': "b6610545448",
+        'USER': "b6610545448",
+        'PASSWORD': "pichapop.ro@ku.th",
+        'HOST': "iot.cpe.ku.ac.th",
+        'PORT': 3306,
     }
 }
 
