@@ -301,6 +301,33 @@ paths:
                     avg_humidity:
                       type: number
                       format: float
+  /forecast/temperature:
+    get:
+      summary: Forecast temperature for the next 14 days
+      operationId: controller.forecast_temperature
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: A list of forecasted temperature values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    day:
+                      type: integer
+                      example: 1
+                    date:
+                      type: string
+                      format: date
+                      example: "2025-04-13"
+                    temperature:
+                      type: number
+                      format: float
+                      example: 32.45
 
 components:
   schemas:

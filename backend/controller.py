@@ -2,7 +2,13 @@ import sys
 from flask import abort
 import pymysql
 from dbutils.pooled_db import PooledDB
-from config import OPENAPI_STUB_DIR, DB_HOST, DB_USER, DB_PASSWD, DB_NAME
+import pandas as pd
+from sqlalchemy import create_engine
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib
+from config import *
+from urllib.parse import quote_plus
+from pmdarima import auto_arima
 
 sys.path.append(OPENAPI_STUB_DIR)
 from swagger_server import models
@@ -234,3 +240,29 @@ def get_api_data_recent_days(days=7):
             for row in cs.fetchall()
         ]
 
+def forecast_temperature():
+    password = DB_PASSWD
+    encoded_password = quote_plus(password)
+    engine = create_engine(f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
+
+    query = "SELECT time, temp FROM kidbright_project ORDER BY time ASC"
+    df = pd.read_sql(query, engine)
+    df['time'] = pd.to_datetime(df['time'])
+    df.set_index('time', inplace=True)
+
+    stepwise_model = auto_arima(df['temp'], seasonal=False, trace=False, suppress_warnings=True)
+    best_order = stepwise_model.order
+
+    model = ARIMA(df['temp'], order=best_order)
+    model_fit = model.fit()
+
+    forecast_steps = 14
+    forecast_result = model_fit.get_forecast(steps=forecast_steps)
+    forecast = forecast_result.predicted_mean
+    future_dates = pd.date_range(start=df.index[-1] + pd.Timedelta(days=1), periods=forecast_steps, freq='D')
+
+    result = [
+        {"day": i+1, "date": date.strftime("%Y-%m-%d"), "temperature": round(temp, 2)}
+        for i, (date, temp) in enumerate(zip(future_dates, forecast))
+    ]
+    return result
