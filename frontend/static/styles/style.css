@@ -1,0 +1,12 @@
+.morning {
+    background-color: yellow;
+}
+.gradient-night-bg{
+    background: linear-gradient(90deg, rgba(37, 42, 48, 1) 0%, rgba(32, 45, 89, 1) 39%, rgb(47, 70, 108) 100%);
+}
+.evening{
+    background-color: aqua;
+}
+.transparent-background-60 {
+    background-color: rgba(27, 51, 99, 0.6);
+}
