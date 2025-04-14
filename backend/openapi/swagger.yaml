@@ -301,15 +301,15 @@ paths:
                     avg_humidity:
                       type: number
                       format: float
+  paths:
   /forecast/temperature:
     get:
       summary: Forecast temperature for the next 14 days
-      operationId: controller.forecast_temperature
       tags:
         - Forecast
       responses:
         '200':
-          description: A list of forecasted temperature values
+          description: A list of temperature forecasts
           content:
             application/json:
               schema:
@@ -317,17 +317,56 @@ paths:
                 items:
                   type: object
                   properties:
-                    day:
-                      type: integer
-                      example: 1
                     date:
                       type: string
                       format: date
-                      example: "2025-04-13"
-                    temperature:
+                    predicted_temp:
                       type: number
                       format: float
-                      example: 32.45
+
+  /forecast/humidity:
+    get:
+      summary: Forecast humidity for the next 14 days
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: A list of humidity forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    predicted_humidity:
+                      type: number
+                      format: float
+
+  /forecast/light:
+    get:
+      summary: Forecast light for the next 14 days
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: A list of light forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    predicted_light:
+                      type: number
+                      format: float
 
 components:
   schemas:
