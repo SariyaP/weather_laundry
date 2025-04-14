@@ -7,6 +7,10 @@
 .evening{
     background-color: aqua;
 }
-.transparent-background-60 {
-    background-color: rgba(27, 51, 99, 0.6);
+.transparent-background {
+    border-radius: 35px;
+    background-color: rgba(250,250,250, 0.2);
+}
+.round {
+    border-radius: 35px;
 }
