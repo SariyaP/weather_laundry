@@ -2,20 +2,12 @@ import sys
 from flask import abort
 import pymysql
 from dbutils.pooled_db import PooledDB
-import pandas as pd
-from sqlalchemy import create_engine
-from statsmodels.tsa.arima.model import ARIMA
-import matplotlib
 from config import *
-from urllib.parse import quote_plus
-from pmdarima import auto_arima
 from sqlalchemy import create_engine
 from urllib.parse import quote_plus
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
-from pmdarima import auto_arima
 from flask import jsonify
-import matplotlib
 
 sys.path.append(OPENAPI_STUB_DIR)
 from swagger_server import models
@@ -31,6 +23,10 @@ pool = PooledDB(
 )
 
 
+def get_connection():
+    return pool.connection()
+
+
 def get_latest_kidbright_data():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -44,7 +40,6 @@ def get_latest_kidbright_data():
         return models.KidbrightData(*result)
     else:
         abort(404)
-
 
 
 def get_kidbright_data():
@@ -71,6 +66,7 @@ def get_kidbright_by_id(data_id):
         else:
             abort(404)
 
+
 def get_kidbright_by_timerange(start, end):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -80,6 +76,7 @@ def get_kidbright_by_timerange(start, end):
             ORDER BY time ASC
         """, [start, end])
         return [models.KidbrightData(*row) for row in cs.fetchall()]
+
 
 def insert_kidbright_data(temp, light, humidity):
     with pool.connection() as conn, conn.cursor() as cs:
@@ -105,6 +102,7 @@ def get_api_data_latest():
         else:
             abort(404)
 
+
 def get_api_data_by_id(data_id):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -118,6 +116,7 @@ def get_api_data_by_id(data_id):
         else:
             abort(404)
 
+
 def get_api_data_by_timerange(start, end):
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -127,6 +126,7 @@ def get_api_data_by_timerange(start, end):
             ORDER BY time ASC
         """, [start, end])
         return [models.ApiData(*row) for row in cs.fetchall()]
+
 
 def insert_api_data(temp, wind_kph, humidity, condition):
     with pool.connection() as conn, conn.cursor() as cs:
@@ -154,6 +154,7 @@ def get_kidbright_avg():
             "avg_humidity": row[2]
         }
 
+
 def get_kidbright_min_max():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -172,6 +173,7 @@ def get_kidbright_min_max():
             "min_humidity": row[4],
             "max_humidity": row[5]
         }
+
 
 def get_kidbright_hourly_average():
     with pool.connection() as conn, conn.cursor() as cs:
@@ -212,6 +214,7 @@ def get_api_data_avg():
             "avg_humidity": row[2]
         }
 
+
 def get_api_condition_count():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
@@ -224,6 +227,7 @@ def get_api_condition_count():
             {"condition": row[0], "count": row[1]}
             for row in cs.fetchall()
         ]
+
 
 def get_api_data_recent_days(days=7):
     with pool.connection() as conn, conn.cursor() as cs:
@@ -259,7 +263,7 @@ def forecast_data(column_name):
     df['time'] = pd.to_datetime(df['time'])
     df.set_index('time', inplace=True)
     if column_name == 'temp':
-        df = df[(df['temp'] > 10) & (df['temp'] < 45)] 
+        df = df[(df['temp'] > 10) & (df['temp'] < 45)]
 
     model = ARIMA(df[column_name], order=(5, 1, 0))
     model_fit = model.fit()
