@@ -10,7 +10,6 @@ from config import *
 from urllib.parse import quote_plus
 from pmdarima import auto_arima
 from sqlalchemy import create_engine
-from config import DB_USER, DB_PASSWORD, DB_HOST, DB_NAME
 from urllib.parse import quote_plus
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
@@ -250,29 +249,25 @@ def get_api_data_recent_days(days=7):
 
 
 def forecast_data(column_name):
-    matplotlib.use('Agg')
-
-    encoded_password = quote_plus(DB_PASSWORD)
-    engine = create_engine(f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
+    password = DB_PASSWD
+    encoded_password = quote_plus(password)
+    engine = create_engine(
+        f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
     query = f"SELECT time, {column_name} FROM kidbright_project ORDER BY time ASC"
     df = pd.read_sql(query, engine)
+
     df['time'] = pd.to_datetime(df['time'])
     df.set_index('time', inplace=True)
-    daily_avg = df.resample('D').mean()
+    if column_name == 'temp':
+        df = df[(df['temp'] > 10) & (df['temp'] < 45)] 
 
-    # Drop NaN values
-    daily_avg = daily_avg.dropna()
-
-    # Auto ARIMA
-    model = auto_arima(daily_avg[column_name], seasonal=False, suppress_warnings=True)
-    best_order = model.order
-    arima_model = ARIMA(daily_avg[column_name], order=best_order)
-    fitted_model = arima_model.fit()
+    model = ARIMA(df[column_name], order=(5, 1, 0))
+    model_fit = model.fit()
 
     forecast_steps = 14
-    forecast_result = fitted_model.get_forecast(steps=forecast_steps)
-    forecast = forecast_result.predicted_mean
-    future_dates = pd.date_range(start=daily_avg.index[-1] + pd.Timedelta(days=1), periods=forecast_steps, freq='D')
+    forecast = model_fit.forecast(steps=forecast_steps)
+    future_dates = pd.date_range(start=df.index[-1] + pd.Timedelta(days=1),
+                                 periods=forecast_steps, freq='D')
 
     result = []
     for date, value in zip(future_dates, forecast):

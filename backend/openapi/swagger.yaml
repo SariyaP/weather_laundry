@@ -301,10 +301,11 @@ paths:
                     avg_humidity:
                       type: number
                       format: float
-  paths:
+
   /forecast/temperature:
     get:
       summary: Forecast temperature for the next 14 days
+      operationId: controller.forecast_temperature
       tags:
         - Forecast
       responses:
@@ -327,6 +328,7 @@ paths:
   /forecast/humidity:
     get:
       summary: Forecast humidity for the next 14 days
+      operationId: controller.forecast_humidity
       tags:
         - Forecast
       responses:
@@ -349,6 +351,7 @@ paths:
   /forecast/light:
     get:
       summary: Forecast light for the next 14 days
+      operationId: controller.forecast_light
       tags:
         - Forecast
       responses:
