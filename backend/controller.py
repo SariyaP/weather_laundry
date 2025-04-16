@@ -2,6 +2,7 @@ import sys
 from flask import abort
 import pymysql
 from dbutils.pooled_db import PooledDB
+from dry_estimator import calc_drying_hours
 from config import *
 from sqlalchemy import create_engine
 from urllib.parse import quote_plus
@@ -296,3 +297,20 @@ def forecast_humidity():
 def forecast_light():
     result = forecast_data('light')
     return jsonify(result)
+
+
+def estimate_drying_time(temp, humid, wind_kph, width=2):
+    try:
+        drying_hours = calc_drying_hours(temp, humid, wind_kph, width)
+        return jsonify({
+            "estimated_drying_time_hours": drying_hours,
+            "input": {
+                "temp": temp,
+                "humidity": humid,
+                "wind_kph": wind_kph,
+                "width": width
+            }
+        })
+    except Exception as e:
+        abort(400, f"Error estimating drying time: {str(e)}")
+

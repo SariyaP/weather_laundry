@@ -13,4 +13,6 @@ from swagger_server.models.inline_response2005 import InlineResponse2005
 from swagger_server.models.inline_response2006 import InlineResponse2006
 from swagger_server.models.inline_response2007 import InlineResponse2007
 from swagger_server.models.inline_response2008 import InlineResponse2008
+from swagger_server.models.inline_response2009 import InlineResponse2009
+from swagger_server.models.inline_response2009_input import InlineResponse2009Input
 from swagger_server.models.kidbright_data import KidbrightData

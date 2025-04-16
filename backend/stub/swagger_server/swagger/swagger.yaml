@@ -305,6 +305,56 @@ paths:
                   $ref: "#/components/schemas/inline_response_200_8"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.forecast_controller
+  /estimate-drying-time:
+    get:
+      tags:
+      - Estimation
+      summary: "Estimate drying time based on temperature, humidity, and wind."
+      operationId: controller_estimate_drying_time
+      parameters:
+      - name: temp
+        in: query
+        description: Temperature in Celsius
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: humid
+        in: query
+        description: Relative humidity (0-100)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: wind_kph
+        in: query
+        description: Wind speed in km/h
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: width
+        in: query
+        description: Material thickness (default = 2)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+          default: 2
+      responses:
+        "200":
+          description: Drying time estimation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_9"
+        "400":
+          description: Invalid input
+      x-openapi-router-controller: swagger_server.controllers.estimation_controller
 components:
   schemas:
     KidbrightData:
@@ -500,4 +550,34 @@ components:
       example:
         date: 2000-01-23
         predicted_light: 0.8008282
+    inline_response_200_9:
+      type: object
+      properties:
+        estimated_drying_time_hours:
+          type: integer
+        input:
+          $ref: "#/components/schemas/inline_response_200_9_input"
+      example:
+        input:
+          wind_kph: 5.962133916683182
+          temp: 6.027456183070403
+          width: 5.637376656633329
+          humidity: 1.4658129805029452
+        estimated_drying_time_hours: 0
+    inline_response_200_9_input:
+      type: object
+      properties:
+        temp:
+          type: number
+        humidity:
+          type: number
+        wind_kph:
+          type: number
+        width:
+          type: number
+      example:
+        wind_kph: 5.962133916683182
+        temp: 6.027456183070403
+        width: 5.637376656633329
+        humidity: 1.4658129805029452
 
