@@ -370,6 +370,61 @@ paths:
                     predicted_light:
                       type: number
                       format: float
+  /estimate-drying-time:
+    get:
+      summary: Estimate drying time based on temperature, humidity, and wind.
+      operationId: controller.estimate_drying_time
+      tags:
+        - Estimation
+      parameters:
+        - name: temp
+          in: query
+          description: Temperature in Celsius
+          required: true
+          schema:
+            type: number
+        - name: humid
+          in: query
+          description: Relative humidity (0-100)
+          required: true
+          schema:
+            type: number
+        - name: wind_kph
+          in: query
+          description: Wind speed in km/h
+          required: true
+          schema:
+            type: number
+        - name: width
+          in: query
+          description: Material thickness (default = 2)
+          required: false
+          schema:
+            type: number
+            default: 2
+      responses:
+        '200':
+          description: Drying time estimation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estimated_drying_time_hours:
+                    type: integer
+                  input:
+                    type: object
+                    properties:
+                      temp:
+                        type: number
+                      humidity:
+                        type: number
+                      wind_kph:
+                        type: number
+                      width:
+                        type: number
+        '400':
+          description: Invalid input
 
 components:
   schemas:
