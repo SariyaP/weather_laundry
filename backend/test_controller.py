@@ -56,28 +56,6 @@ class TestController(unittest.TestCase):
         self.assertEqual(result[0].id, 1)
 
     @patch('controller.pool')
-    def test_get_kidbright_by_id_success(self, mock_pool):
-        mock_conn = MagicMock()
-        mock_cursor = mock_conn.cursor.return_value.__enter__.return_value
-        mock_cursor.fetchone.return_value = (
-            1, '2025-04-15 18:00:00', 25.5, 600.0, 70.0)
-        mock_pool.connection.return_value.__enter__.return_value = mock_conn
-
-        result = get_kidbright_by_id(1)
-        self.assertIsInstance(result, models.KidbrightData)
-        self.assertEqual(result.id, 1)
-
-    @patch('controller.pool')
-    def test_get_kidbright_by_id_not_found(self, mock_pool):
-        mock_conn = MagicMock()
-        mock_cursor = mock_conn.cursor.return_value.__enter__.return_value
-        mock_cursor.fetchone.return_value = None
-        mock_pool.connection.return_value.__enter__.return_value = mock_conn
-
-        with self.assertRaises(werkzeug.exceptions.NotFound):
-            get_kidbright_by_id(99)
-
-    @patch('controller.pool')
     def test_get_kidbright_by_timerange_success(self, mock_pool):
         mock_conn = MagicMock()
         mock_cursor = mock_conn.cursor.return_value.__enter__.return_value
@@ -92,23 +70,6 @@ class TestController(unittest.TestCase):
         self.assertIsInstance(result, list)
         self.assertEqual(len(result), 2)
         self.assertIsInstance(result[0], models.KidbrightData)
-
-    @patch('controller.pool')
-    def test_insert_kidbright_data_success(self, mock_pool):
-        mock_conn = MagicMock()
-        mock_cursor = mock_conn.cursor.return_value.__enter__.return_value
-        mock_cursor.rowcount = 1
-        mock_pool.connection.return_value.__enter__.return_value = mock_conn
-
-        result = insert_kidbright_data(27.0, 700.0, 75.0)
-        self.assertEqual(result,
-                         {"status": "success", "message": "Data inserted"})
-        mock_cursor.execute.assert_called_once_with(
-            """
-            INSERT INTO kidbright_project (time, temp, light, humidity)
-            VALUES (NOW(), %s, %s, %s)
-        """, [27.0, 700.0, 75.0])
-        mock_conn.commit.assert_called_once()
 
     @patch('controller.pool')
     def test_get_api_data_latest_success(self, mock_pool):

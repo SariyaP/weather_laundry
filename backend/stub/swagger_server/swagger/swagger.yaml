@@ -355,6 +355,27 @@ paths:
         "400":
           description: Invalid input
       x-openapi-router-controller: swagger_server.controllers.estimation_controller
+  /forecast-weather-conditions:
+    get:
+      tags:
+      - Forecast
+      summary: Forecast weather conditions for the next 14 days
+      description: "Uses historical data and machine learning to predict daily weather\
+        \ conditions (e.g., sunny, cloudy, rain) for the next 14 days."
+      operationId: controller_predict_w_condition_next_14_days
+      responses:
+        "200":
+          description: Successful weather condition forecast
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_10"
+                x-content-type: application/json
+        "500":
+          description: Internal server error
+      x-openapi-router-controller: swagger_server.controllers.forecast_controller
 components:
   schemas:
     KidbrightData:
@@ -564,6 +585,34 @@ components:
           width: 5.637376656633329
           humidity: 1.4658129805029452
         estimated_drying_time_hours: 0
+    inline_response_200_10:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: 2025-04-12
+        temp:
+          type: number
+          format: float
+          example: 32.5
+        wind_kph:
+          type: number
+          format: float
+          example: 15.3
+        humidity:
+          type: number
+          format: float
+          example: 68.5
+        predicted_condition:
+          type: string
+          example: Partly Cloudy
+      example:
+        date: 2025-04-12T00:00:00.000+00:00
+        wind_kph: 15.3
+        temp: 32.5
+        humidity: 68.5
+        predicted_condition: Partly Cloudy
     inline_response_200_9_input:
       type: object
       properties:

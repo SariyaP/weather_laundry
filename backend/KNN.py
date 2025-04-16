@@ -10,17 +10,20 @@ from urllib.parse import quote_plus
 import numpy as np
 from datetime import timedelta
 
+
 def forecast_column(df, column_name, steps=14):
     model = ARIMA(df[column_name], order=(5, 1, 0))
     model_fit = model.fit()
     forecast = model_fit.forecast(steps=steps)
     return forecast
 
+
 def predict_w_condition_next_14_days():
     # 1. Connect to MySQL
     password = "pichapop.ro@ku.th"
     encoded_password = quote_plus(password)
-    engine = create_engine(f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
+    engine = create_engine(
+        f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
 
     # 2. Get training data
     query = "SELECT temp, wind_kph, humidity, w_condition FROM api_data"
@@ -39,7 +42,9 @@ def predict_w_condition_next_14_days():
     X_scaled = scaler.fit_transform(X)
 
     # 5. Train KNN
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y,
+                                                        test_size=0.2,
+                                                        random_state=42)
     knn = KNeighborsClassifier(n_neighbors=3)
     knn.fit(X_train, y_train)
 
@@ -66,11 +71,13 @@ def predict_w_condition_next_14_days():
     forecast_days = 14
     temp_forecast = forecast_column(daily_avg, 'temp', steps=forecast_days)
     wind_forecast = forecast_column(daily_avg, 'wind_kph', steps=forecast_days)
-    humidity_forecast = forecast_column(daily_avg, 'humidity', steps=forecast_days)
+    humidity_forecast = forecast_column(daily_avg, 'humidity',
+                                        steps=forecast_days)
 
     # 8. Prepare future dates and features
     last_date = daily_avg.index[-1]
-    future_dates = [last_date + timedelta(days=i) for i in range(1, forecast_days + 1)]
+    future_dates = [last_date + timedelta(days=i) for i in
+                    range(1, forecast_days + 1)]
 
     future_data = pd.DataFrame({
         'date': future_dates,
@@ -80,16 +87,17 @@ def predict_w_condition_next_14_days():
     })
 
     # 9. Normalize forecasted features
-    future_scaled = scaler.transform(future_data[['temp', 'wind_kph', 'humidity']])
+    future_scaled = scaler.transform(
+        future_data[['temp', 'wind_kph', 'humidity']])
 
     # 10. Predict condition
     condition_preds = knn.predict(future_scaled)
     decoded_preds = le.inverse_transform(condition_preds)
 
     # 11. Print results
-    print("\n🧠 Weather Condition Predictions for the Next 14 Days:")
+    print("\nWeather Condition Predictions for the Next 14 Days:")
     for i in range(forecast_days):
-        print(f"Day {i+1} - {future_data['date'][i].strftime('%Y-%m-%d')}: "
+        print(f"Day {i + 1} - {future_data['date'][i].strftime('%Y-%m-%d')}: "
               f"Temp: {future_data['temp'][i]:.2f}°C, "
               f"Wind: {future_data['wind_kph'][i]:.2f} kph, "
               f"Humidity: {future_data['humidity'][i]:.2f}%, "

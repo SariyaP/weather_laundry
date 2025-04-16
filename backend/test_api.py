@@ -1,40 +1,46 @@
 import unittest
+from unittest import mock
+import pymysql
 import requests
 import json
 from datetime import datetime, timedelta
 
 # --- Configuration ---
-BASE_URL = "http://127.0.0.1:8080/laundry-api/v1"  # Adjust if your Flask app runs on a different port
+BASE_URL = "http://127.0.0.1:8080/laundry-api/v1" 
 
-# --- Helper Function ---
+
 def assert_json_response(test_case, response, status_code=200):
     test_case.assertEqual(response.status_code, status_code)
-    test_case.assertEqual(response.headers.get('Content-Type'), 'application/json')
+    test_case.assertEqual(response.headers.get('Content-Type'),
+                          'application/json')
     try:
         return response.json()
     except json.JSONDecodeError:
         test_case.fail("Response is not valid JSON")
         return None
 
-# --- API Test Suite ---
+
 class ApiEndpointsTest(unittest.TestCase):
 
     # Helper function to insert test data (for integration tests)
     def _insert_kidbright_data(self, temp, light, humidity):
         data = {"temp": temp, "light": light, "humidity": humidity}
         headers = {"Content-Type": "application/json"}
-        response = requests.post(f"{BASE_URL}/kidbright", json=data, headers=headers)
+        response = requests.post(f"{BASE_URL}/kidbright", json=data,
+                                 headers=headers)
         self.assertEqual(response.status_code, 200)
         return response.json()
 
     def _insert_api_weather_data(self, temp, wind_kph, humidity, condition):
-        data = {"temp": temp, "wind_kph": wind_kph, "humidity": humidity, "condition": condition}
+        data = {"temp": temp, "wind_kph": wind_kph, "humidity": humidity,
+                "condition": condition}
         headers = {"Content-Type": "application/json"}
-        response = requests.post(f"{BASE_URL}/api_data", json=data, headers=headers)
+        response = requests.post(f"{BASE_URL}/api_data", json=data,
+                                 headers=headers)
         self.assertEqual(response.status_code, 200)
         return response.json()
 
-    # --- Kidbright Data Endpoints ---
+
     def test_get_latest_kidbright_data(self):
         response = requests.get(f"{BASE_URL}/kidbright/latest")
         assert_json_response(self, response)
@@ -72,31 +78,32 @@ class ApiEndpointsTest(unittest.TestCase):
             self.skipTest("No Kidbright data available to test get by ID")
 
     def test_get_kidbright_by_id_not_found(self):
-        response = requests.get(f"{BASE_URL}/kidbright/999999") # Assuming this ID doesn't exist
+        response = requests.get(
+            f"{BASE_URL}/kidbright/999999")  # Assuming this ID doesn't exist
         self.assertEqual(response.status_code, 404)
 
     def test_get_kidbright_by_timerange(self):
         now = datetime.now()
         start_time = (now - timedelta(hours=1)).isoformat()
         end_time = now.isoformat()
-        response = requests.get(f"{BASE_URL}/kidbright/range?start={start_time}&end={end_time}")
+        response = requests.get(
+            f"{BASE_URL}/kidbright/range?start={start_time}&end={end_time}")
         assert_json_response(self, response)
         data = response.json()
         self.assertIsInstance(data, list)
         if data:
             self.assertIn("time", data[0])
-            # Further assertions on the time range can be added
 
     def test_insert_kidbright_data(self):
         data = {"temp": 28.5, "light": 70.2, "humidity": 62.1}
         headers = {"Content-Type": "application/json"}
-        response = requests.post(f"{BASE_URL}/kidbright", json=data, headers=headers)
+        response = requests.post(f"{BASE_URL}/kidbright", json=data,
+                                 headers=headers)
         assert_json_response(self, response)
         response_data = response.json()
         self.assertEqual(response_data["status"], "success")
         self.assertEqual(response_data["message"], "Data inserted")
 
-    # --- API Data Endpoints ---
     def test_get_api_data_latest(self):
         response = requests.get(f"{BASE_URL}/api_data/latest")
         assert_json_response(self, response)
@@ -121,14 +128,16 @@ class ApiEndpointsTest(unittest.TestCase):
             self.skipTest("No API data available to test get by ID")
 
     def test_get_api_data_by_id_not_found(self):
-        response = requests.get(f"{BASE_URL}/api_data/999999") # Assuming this ID doesn't exist
+        response = requests.get(
+            f"{BASE_URL}/api_data/999999")  # Assuming this ID doesn't exist
         self.assertEqual(response.status_code, 404)
 
     def test_get_api_data_by_timerange(self):
         now = datetime.now()
         start_time = (now - timedelta(hours=1)).isoformat()
         end_time = now.isoformat()
-        response = requests.get(f"{BASE_URL}/api_data/range?start={start_time}&end={end_time}")
+        response = requests.get(
+            f"{BASE_URL}/api_data/range?start={start_time}&end={end_time}")
         assert_json_response(self, response)
         data = response.json()
         self.assertIsInstance(data, list)
@@ -136,9 +145,11 @@ class ApiEndpointsTest(unittest.TestCase):
             self.assertIn("time", data[0])
 
     def test_insert_api_data(self):
-        data = {"temp": 32.1, "wind_kph": 5.6, "humidity": 75.3, "condition": "Cloudy"}
+        data = {"temp": 32.1, "wind_kph": 5.6, "humidity": 75.3,
+                "condition": "Cloudy"}
         headers = {"Content-Type": "application/json"}
-        response = requests.post(f"{BASE_URL}/api_data", json=data, headers=headers)
+        response = requests.post(f"{BASE_URL}/api_data", json=data,
+                                 headers=headers)
         assert_json_response(self, response)
         response_data = response.json()
         self.assertEqual(response_data["status"], "success")
@@ -222,6 +233,37 @@ class ApiEndpointsTest(unittest.TestCase):
             self.assertIn("date", data[0])
             self.assertIn("predicted_light", data[0])
 
+    def test_forecast_temperature_length(self):
+        response = requests.get(f"{BASE_URL}/forecast/temperature")
+        assert_json_response(self, response)
+        data = response.json()
+        self.assertIsInstance(data, list)
+        self.assertEqual(len(data), 14)
+
+    def test_forecast_humidity_length(self):
+        response = requests.get(f"{BASE_URL}/forecast/humidity")
+        assert_json_response(self, response)
+        data = response.json()
+        self.assertIsInstance(data, list)
+        self.assertEqual(len(data), 14)
+
+    def test_forecast_light_length(self):
+        response = requests.get(f"{BASE_URL}/forecast/light")
+        assert_json_response(self, response)
+        data = response.json()
+        self.assertIsInstance(data, list)
+        self.assertEqual(len(data), 14)
+
+    @mock.patch('conteoller.pool.connection')
+    def test_get_latest_kidbright_data_db_error(self, mock_conn):
+        mock_conn.side_effect = pymysql.Error("Simulated database connection error")
+
+        response = requests.get(f"{BASE_URL}/kidbright/latest")
+        self.assertEqual(response.status_code, 500)
+        assert_json_response(self, response)
+        data = response.json()
+        self.assertIn("error", data)
+
 # --- Integration Test Suite ---
 class IntegrationTest(unittest.TestCase):
 
@@ -229,7 +271,8 @@ class IntegrationTest(unittest.TestCase):
         # 1. Insert Kidbright data via the API
         test_data = {"temp": 27.0, "light": 65.5, "humidity": 70.0}
         headers = {"Content-Type": "application/json"}
-        insert_response = requests.post(f"{BASE_URL}/kidbright", json=test_data, headers=headers)
+        insert_response = requests.post(f"{BASE_URL}/kidbright",
+                                        json=test_data, headers=headers)
         assert_json_response(self, insert_response, 200)
         insert_result = insert_response.json()
         self.assertEqual(insert_result["status"], "success")
@@ -243,33 +286,35 @@ class IntegrationTest(unittest.TestCase):
         self.assertEqual(float(latest_data["humidity"]), test_data["humidity"])
 
     def test_api_data_insertion_and_timerange_retrieval(self):
-        # 1. Insert API weather data
-        test_data = {"temp": 33.5, "wind_kph": 4.2, "humidity": 68.0, "condition": "Partly Cloudy"}
+        test_data = {"temp": 33.5, "wind_kph": 4.2, "humidity": 68.0,
+                     "condition": "Partly Cloudy"}
         headers = {"Content-Type": "application/json"}
-        insert_response = requests.post(f"{BASE_URL}/api_data", json=test_data, headers=headers)
+        insert_response = requests.post(f"{BASE_URL}/api_data", json=test_data,
+                                        headers=headers)
         assert_json_response(self, insert_response, 200)
         insert_result = insert_response.json()
         self.assertEqual(insert_result["status"], "success")
 
-        # 2. Retrieve data within a recent timerange and check for the inserted data
         now = datetime.now()
         start_time = (now - timedelta(minutes=5)).isoformat()
         end_time = now.isoformat()
-        range_response = requests.get(f"{BASE_URL}/api_data/range?start={start_time}&end={end_time}")
+        range_response = requests.get(
+            f"{BASE_URL}/api_data/range?start={start_time}&end={end_time}")
         assert_json_response(self, range_response)
         range_data = range_response.json()
         found = False
         for item in range_data:
             if float(item.get("temp", -99)) == test_data["temp"] and \
-               float(item.get("wind_kph", -99)) == test_data["wind_kph"] and \
-               float(item.get("humidity", -99)) == test_data["humidity"] and \
-               item.get("condition") == test_data["condition"]:
+                    float(item.get("wind_kph", -99)) == test_data[
+                "wind_kph"] and \
+                    float(item.get("humidity", -99)) == test_data[
+                "humidity"] and \
+                    item.get("condition") == test_data["condition"]:
                 found = True
                 break
-        self.assertTrue(found, "Inserted API data not found within the time range")
+        self.assertTrue(found, "Inserted API data not found within the time "
+                               "range")
 
-    # Add more integration tests to cover interactions between different parts of your application
-    # For example, if there's a process that uses Kidbright data to trigger an action via another API.
 
 if __name__ == '__main__':
     unittest.main()

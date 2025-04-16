@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
+from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
 from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
 from swagger_server.models.inline_response2007 import InlineResponse2007  # noqa: E501
 from swagger_server.models.inline_response2008 import InlineResponse2008  # noqa: E501
@@ -43,6 +44,17 @@ class TestForecastController(BaseTestCase):
         """
         response = self.client.open(
             '/laundry-api/v1/forecast/temperature',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_controller_predict_w_condition_next14_days(self):
+        """Test case for controller_predict_w_condition_next14_days
+
+        Forecast weather conditions for the next 14 days
+        """
+        response = self.client.open(
+            '/laundry-api/v1/forecast-weather-conditions',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

@@ -1,6 +1,7 @@
 import connexion
 import six
 
+from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
 from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
 from swagger_server.models.inline_response2007 import InlineResponse2007  # noqa: E501
 from swagger_server.models.inline_response2008 import InlineResponse2008  # noqa: E501
@@ -36,5 +37,16 @@ def controller_forecast_temperature():  # noqa: E501
 
 
     :rtype: List[InlineResponse2006]
+    """
+    return 'do some magic!'
+
+
+def controller_predict_w_condition_next14_days():  # noqa: E501
+    """Forecast weather conditions for the next 14 days
+
+    Uses historical data and machine learning to predict daily weather conditions (e.g., sunny, cloudy, rain) for the next 14 days. # noqa: E501
+
+
+    :rtype: List[InlineResponse20010]
     """
     return 'do some magic!'
