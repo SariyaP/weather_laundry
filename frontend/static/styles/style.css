@@ -5,9 +5,8 @@ html, body {
 }
 
 .transparent-background {
-    border-radius: 35px;
     background-color: rgba(250,250,250, 0.2);
 }
-.round {
-    border-radius: 35px;
+.trans {
+    color: rgba(255, 255, 255);
 }
