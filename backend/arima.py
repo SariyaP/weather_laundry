@@ -14,7 +14,7 @@ matplotlib.use('TkAgg')
 
 def predict_temperature():
     # Connect to MySQL
-    password = "pichapop.ro@ku.th"
+    password = DB_PASSWD
     encoded_password = quote_plus(password)
     engine = create_engine(f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
 
