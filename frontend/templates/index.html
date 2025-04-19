@@ -16,7 +16,7 @@
 
       </div>
     </div>
-      <div class="py-3">
+      <div class="mt-3">
           <div class="card py-3 transparent-background round border-0">
               <div class="card-body">
         <div class="d-flex justify-content-between align-items-center px-3">
@@ -31,9 +31,14 @@
   </div>
 </div>
 </div>
+      <div class="py-3">
+          <div class="py-3 card transparent-background round border-0">
+      <canvas id="tempTrendChart" height="80"></canvas>
+          </div>
+      </div>
       <div class="row">
           <div class="col">
-      <div class="card py-3 transparent-background round border-0">
+      <div class="card transparent-background round border-0">
               <div class="card-body">
                   <h6 class="flex-grow-1 text-white"> <i class="bi bi-water px-2"></i>Humidity</h6>
                   <h2 class="px-3 py-2 text-white display-6">50%</h2>
@@ -45,7 +50,7 @@
 </div>
       </div>
           <div class="col">
-          <div class="card py-3 transparent-background round border-0">
+          <div class="card transparent-background round border-0">
               <div class="card-body">
                   <h6 class="flex-grow-1 text-white"><i class="bi bi-wind px-2"></i>Wind Speed</h6>
                   <h2 class="px-3 py-2 text-white display-6">50%</h2>
@@ -55,16 +60,9 @@
 </div>
 </div>
       </div>
-      <div class="card py-3 transparent-background round border-0">
-          <div class="d-flex justify-content-center">
-      <div
-        class="border rounded"
-        data-coreui-locale="en-US"
-        data-coreui-start-date="2024/02/13"
-        data-coreui-toggle="calendar"
-      ></div>
-    </div>
-      </div>
+      <div class="py-3">
+      <div class="card py-3 px-3 d-flex align-items-center transparent-background round border-0 weatherCalendar" id="weatherCalendar"></div>
+</div>
 </div>
 </div>
 {% endblock %}

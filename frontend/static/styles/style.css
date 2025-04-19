@@ -10,3 +10,43 @@ html, body {
 .trans {
     color: rgba(255, 255, 255);
 }
+.round{
+    border-radius: 35px;
+}
+  #weatherCalendar * {
+    color: white !important;
+    text-align: center !important;
+    text-decoration: none !important;
+  }
+
+  #weatherCalendar .fc-col-header-cell {
+    background-color: transparent !important;
+  }
+
+  #weatherCalendar td,
+  #weatherCalendar th,
+  #weatherCalendar .fc-scrollgrid,
+  #weatherCalendar .fc-theme-standard td,
+  #weatherCalendar .fc-theme-standard th {
+    border: none !important;
+      background-color: transparent;
+  }
+
+  #weatherCalendar .fc-daygrid-day {
+    background-color: transparent;
+  }
+
+  #weatherCalendar a {
+    text-decoration: none !important;
+  }
+  #weatherCalendar .fc-col-header-cell {
+    background-color: transparent !important;
+  }
+
+  #weatherCalendar .fc-col-header-cell-cushion {
+    color: white !important;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.5em 0;
+    background-color: transparent;
+  }
