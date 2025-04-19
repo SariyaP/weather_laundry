@@ -135,6 +135,8 @@ def get_api_data_by_timerange(start, end):
             ORDER BY time ASC
         """, [start, end])
         return [models.ApiData(*row) for row in cs.fetchall()]
+    
+
 
 
 def insert_api_data(temp, wind_kph, humidity, condition):
@@ -259,6 +261,28 @@ def get_api_data_recent_days(days=7):
             }
             for row in cs.fetchall()
         ]
+    
+def get_past_24_hours_avg():
+    with pool.connection() as conn, conn.cursor() as cs:
+        cs.execute("""
+            SELECT 
+                HOUR(time) AS hour, 
+                AVG(temp) AS avg_temp, 
+                AVG(wind_kph) AS avg_wind_kph, 
+                AVG(humidity) AS avg_humidity
+            FROM api_data
+            WHERE time > NOW() - INTERVAL 24 HOUR
+            GROUP BY HOUR(time)
+            ORDER BY hour DESC
+        """)
+        rows = cs.fetchall()
+        if rows:
+            return [
+                models.ApiDataAvg(hour=row[0], avg_temp=row[1], avg_wind_kph=row[2], avg_humidity=row[3])
+                for row in rows
+            ]
+        else:
+            abort(404)
 
 
 def forecast_data(column_name):
@@ -330,25 +354,46 @@ def forecast_column(df, column_name, steps=14):
     return forecast
 
 
+def classify_drying_status(drying_time, weather_condition):
+    weather_condition = weather_condition.lower()
+    cloudy_keywords = ['cloud', 'mist', 'overcast', 'fog']
+    
+    is_cloudy_or_mist = any(word in weather_condition for word in cloudy_keywords)
+
+    if drying_time <= 2:
+        if is_cloudy_or_mist:
+            return "Moderate"
+        else:
+            return "Good"
+    else:
+        return "Bad"
+    
+
 def predict_w_condition_next_14_days():
     encoded_password = quote_plus(DB_PASSWD)
     engine = create_engine(
         f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
+    
     query = "SELECT temp, wind_kph, humidity, w_condition FROM api_data"
     df = pd.read_sql(query, engine)
     df.dropna(inplace=True)
+
     le = LabelEncoder()
     df['w_condition_encoded'] = le.fit_transform(df['w_condition'])
+
     features = ['temp', 'wind_kph', 'humidity']
     X = df[features]
     y = df['w_condition_encoded']
+
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y,
-                                                        test_size=0.2,
-                                                        random_state=42)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_scaled, y, test_size=0.2, random_state=42)
+
     knn = KNeighborsClassifier(n_neighbors=3)
     knn.fit(X_train, y_train)
+
     y_pred = knn.predict(X_test)
     print("Accuracy:", round(accuracy_score(y_test, y_pred), 2))
     print(classification_report(
@@ -357,19 +402,21 @@ def predict_w_condition_next_14_days():
         target_names=le.classes_,
         zero_division=0
     ))
+
     forecast_query = "SELECT time, temp, wind_kph, humidity FROM api_data ORDER BY time ASC"
     forecast_df = pd.read_sql(forecast_query, engine)
     forecast_df['time'] = pd.to_datetime(forecast_df['time'])
     forecast_df.set_index('time', inplace=True)
+
     daily_avg = forecast_df.resample('D').mean().dropna()
+
     forecast_days = 14
     temp_forecast = forecast_column(daily_avg, 'temp', steps=forecast_days)
     wind_forecast = forecast_column(daily_avg, 'wind_kph', steps=forecast_days)
-    humidity_forecast = forecast_column(daily_avg, 'humidity',
-                                        steps=forecast_days)
+    humidity_forecast = forecast_column(daily_avg, 'humidity', steps=forecast_days)
+
     last_date = daily_avg.index[-1]
-    future_dates = [last_date + timedelta(days=i) for i in
-                    range(1, forecast_days + 1)]
+    future_dates = [last_date + timedelta(days=i) for i in range(1, forecast_days + 1)]
 
     future_data = pd.DataFrame({
         'date': future_dates,
@@ -378,21 +425,27 @@ def predict_w_condition_next_14_days():
         'humidity': humidity_forecast
     })
 
-    future_scaled = scaler.transform(
-        future_data[['temp', 'wind_kph', 'humidity']])
-
+    future_scaled = scaler.transform(future_data[['temp', 'wind_kph', 'humidity']])
     condition_preds = knn.predict(future_scaled)
     decoded_preds = le.inverse_transform(condition_preds)
 
     results = []
     for i in range(forecast_days):
+        temp = future_data['temp'][i]
+        wind_kph = future_data['wind_kph'][i]
+        humidity = future_data['humidity'][i]
+        weather_cond = decoded_preds[i]
+        drying_time = calc_drying_hours(temp, humidity, wind_kph, width=2)
+        drying_status = classify_drying_status(drying_time, weather_cond)
+
         results.append({
             "date": future_data['date'][i].strftime('%Y-%m-%d'),
-            "temp": round(future_data['temp'][i], 2),
-            "wind_kph": round(future_data['wind_kph'][i], 2),
-            "humidity": round(future_data['humidity'][i], 2),
-            "predicted_condition": decoded_preds[i]
+            "temp": round(temp, 2),
+            "wind_kph": round(wind_kph, 2),
+            "humidity": round(humidity, 2),
+            "predicted_condition": weather_cond,
+            "estimated_drying_time_hours": round(drying_time, 2),
+            "drying_status": drying_status
         })
 
     return jsonify(results)
-

@@ -365,7 +365,7 @@ paths:
       operationId: controller_predict_w_condition_next_14_days
       responses:
         "200":
-          description: Successful weather condition forecast
+          description: 14-day drying forecast with condition and status
           content:
             application/json:
               schema:
@@ -580,10 +580,10 @@ components:
           $ref: "#/components/schemas/inline_response_200_9_input"
       example:
         input:
-          wind_kph: 5.962133916683182
-          temp: 6.027456183070403
-          width: 5.637376656633329
-          humidity: 1.4658129805029452
+          wind_kph: 5.962133916683182377482808078639209270477294921875
+          temp: 6.02745618307040320615897144307382404804229736328125
+          width: 5.63737665663332876420099637471139430999755859375
+          humidity: 1.46581298050294517310021547018550336360931396484375
         estimated_drying_time_hours: 0
     inline_response_200_10:
       type: object
@@ -591,28 +591,30 @@ components:
         date:
           type: string
           format: date
-          example: 2025-04-12
         temp:
           type: number
-          format: float
-          example: 32.5
         wind_kph:
           type: number
-          format: float
-          example: 15.3
         humidity:
           type: number
-          format: float
-          example: 68.5
         predicted_condition:
           type: string
-          example: Partly Cloudy
+        estimated_drying_time_hours:
+          type: number
+        drying_status:
+          type: string
+          enum:
+          - Good
+          - Moderate
+          - Bad
       example:
-        date: 2025-04-12T00:00:00.000+00:00
-        wind_kph: 15.3
-        temp: 32.5
-        humidity: 68.5
-        predicted_condition: Partly Cloudy
+        date: 2000-01-23
+        wind_kph: 6.02745618307040320615897144307382404804229736328125
+        temp: 0.80082819046101150206595775671303272247314453125
+        humidity: 1.46581298050294517310021547018550336360931396484375
+        drying_status: Good
+        predicted_condition: predicted_condition
+        estimated_drying_time_hours: 5.962133916683182377482808078639209270477294921875
     inline_response_200_9_input:
       type: object
       properties:
@@ -625,8 +627,8 @@ components:
         width:
           type: number
       example:
-        wind_kph: 5.962133916683182
-        temp: 6.027456183070403
-        width: 5.637376656633329
-        humidity: 1.4658129805029452
+        wind_kph: 5.962133916683182377482808078639209270477294921875
+        temp: 6.02745618307040320615897144307382404804229736328125
+        width: 5.63737665663332876420099637471139430999755859375
+        humidity: 1.46581298050294517310021547018550336360931396484375
 

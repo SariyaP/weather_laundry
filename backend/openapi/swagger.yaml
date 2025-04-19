@@ -425,6 +425,39 @@ paths:
                         type: number
         '400':
           description: Invalid input
+  /api/past-24-hours-avg:
+    get:
+      summary: "Fetch average data for the past 24 hours"
+      operationId: controller.get_past_24_hours_avg
+      description: "Returns the average temperature, wind speed, and humidity per hour for the past 24 hours."
+      responses:
+        '200':
+          description: "Successfully retrieved 24-hour average data."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    hour:
+                      type: integer
+                      description: "Hour of the day (0-23)."
+                    avg_temp:
+                      type: number
+                      format: float
+                      description: "Average temperature for the hour."
+                    avg_wind_kph:
+                      type: number
+                      format: float
+                      description: "Average wind speed in km/h for the hour."
+                    avg_humidity:
+                      type: number
+                      format: float
+                      description: "Average humidity for the hour."
+        '404':
+          description: "No data found for the past 24 hours."
+
   /forecast-weather-conditions:
     get:
       summary: Forecast weather conditions for the next 14 days
@@ -433,8 +466,8 @@ paths:
       tags:
         - Forecast
       responses:
-        '200':
-          description: Successful weather condition forecast
+        200:
+          description: 14-day drying forecast with condition and status
           content:
             application/json:
               schema:
@@ -445,22 +478,19 @@ paths:
                     date:
                       type: string
                       format: date
-                      example: "2025-04-12"
                     temp:
                       type: number
-                      format: float
-                      example: 32.5
                     wind_kph:
                       type: number
-                      format: float
-                      example: 15.3
                     humidity:
                       type: number
-                      format: float
-                      example: 68.5
                     predicted_condition:
                       type: string
-                      example: "Partly Cloudy"
+                    estimated_drying_time_hours:
+                      type: number
+                    drying_status:
+                      type: string
+                      enum: [Good, Moderate, Bad]
         '500':
           description: Internal server error
 

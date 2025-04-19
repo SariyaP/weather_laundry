@@ -14,7 +14,7 @@ class InlineResponse20010(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, _date: date=None, temp: float=None, wind_kph: float=None, humidity: float=None, predicted_condition: str=None):  # noqa: E501
+    def __init__(self, _date: date=None, temp: float=None, wind_kph: float=None, humidity: float=None, predicted_condition: str=None, estimated_drying_time_hours: float=None, drying_status: str=None):  # noqa: E501
         """InlineResponse20010 - a model defined in Swagger
 
         :param _date: The _date of this InlineResponse20010.  # noqa: E501
@@ -27,13 +27,19 @@ class InlineResponse20010(Model):
         :type humidity: float
         :param predicted_condition: The predicted_condition of this InlineResponse20010.  # noqa: E501
         :type predicted_condition: str
+        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20010.  # noqa: E501
+        :type estimated_drying_time_hours: float
+        :param drying_status: The drying_status of this InlineResponse20010.  # noqa: E501
+        :type drying_status: str
         """
         self.swagger_types = {
             '_date': date,
             'temp': float,
             'wind_kph': float,
             'humidity': float,
-            'predicted_condition': str
+            'predicted_condition': str,
+            'estimated_drying_time_hours': float,
+            'drying_status': str
         }
 
         self.attribute_map = {
@@ -41,13 +47,17 @@ class InlineResponse20010(Model):
             'temp': 'temp',
             'wind_kph': 'wind_kph',
             'humidity': 'humidity',
-            'predicted_condition': 'predicted_condition'
+            'predicted_condition': 'predicted_condition',
+            'estimated_drying_time_hours': 'estimated_drying_time_hours',
+            'drying_status': 'drying_status'
         }
         self.__date = _date
         self._temp = temp
         self._wind_kph = wind_kph
         self._humidity = humidity
         self._predicted_condition = predicted_condition
+        self._estimated_drying_time_hours = estimated_drying_time_hours
+        self._drying_status = drying_status
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse20010':
@@ -164,3 +174,51 @@ class InlineResponse20010(Model):
         """
 
         self._predicted_condition = predicted_condition
+
+    @property
+    def estimated_drying_time_hours(self) -> float:
+        """Gets the estimated_drying_time_hours of this InlineResponse20010.
+
+
+        :return: The estimated_drying_time_hours of this InlineResponse20010.
+        :rtype: float
+        """
+        return self._estimated_drying_time_hours
+
+    @estimated_drying_time_hours.setter
+    def estimated_drying_time_hours(self, estimated_drying_time_hours: float):
+        """Sets the estimated_drying_time_hours of this InlineResponse20010.
+
+
+        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20010.
+        :type estimated_drying_time_hours: float
+        """
+
+        self._estimated_drying_time_hours = estimated_drying_time_hours
+
+    @property
+    def drying_status(self) -> str:
+        """Gets the drying_status of this InlineResponse20010.
+
+
+        :return: The drying_status of this InlineResponse20010.
+        :rtype: str
+        """
+        return self._drying_status
+
+    @drying_status.setter
+    def drying_status(self, drying_status: str):
+        """Sets the drying_status of this InlineResponse20010.
+
+
+        :param drying_status: The drying_status of this InlineResponse20010.
+        :type drying_status: str
+        """
+        allowed_values = ["Good", "Moderate", "Bad"]  # noqa: E501
+        if drying_status not in allowed_values:
+            raise ValueError(
+                "Invalid value for `drying_status` ({0}), must be one of {1}"
+                .format(drying_status, allowed_values)
+            )
+
+        self._drying_status = drying_status
