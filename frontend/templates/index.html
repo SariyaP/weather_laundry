@@ -108,14 +108,14 @@
     const windSpeed = document.getElementById('weather-data').getAttribute('data-wind-speed');
     const thickness = document.getElementById('thickness').value;
     const url = `http://127.0.0.1:8080/laundry-api/v1/estimate-drying-time?temp=${temp}&humid=${humidity}&wind_kph=${windSpeed}&width=${thickness}`;
+
     fetch(url)
-    console.log(fetch(url))
       .then(response => response.json())
       .then(data => {
-        if (data.drying_time && data.drying_status) {
-          document.getElementById('drying-time-text').innerText = `Estimated drying time: ${data.drying_time} hours`;
-          document.getElementById('drying-status-image').src = data.drying_status === 'good' ? '{% static "images/good.png" %}' : '{% static "images/bad.png" %}';
-          document.getElementById('drying-status-image').style.display = 'block';
+        if (data.estimated_drying_time_hours !== undefined) {
+          const dryingTime = parseFloat(data.estimated_drying_time_hours);
+          const displayTime = dryingTime < 1 ? "< 1 hour" : `${dryingTime} hour${dryingTime === 1 ? '' : 's'}`;
+          document.getElementById('drying-time-text').innerText = `Estimated drying time: ${displayTime}`;
         } else {
           document.getElementById('drying-time-text').innerText = 'Failed to estimate drying time. Please try again.';
           document.getElementById('drying-status-image').style.display = 'none';
@@ -128,5 +128,6 @@
       });
   });
 </script>
+
 
 {% endblock %}
