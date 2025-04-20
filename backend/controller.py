@@ -370,15 +370,16 @@ def get_api_hourly_avg():
 
 
 def forecast_data(column_name):
-    password = DB_PASSWD
-    encoded_password = quote_plus(password)
-    engine = create_engine(
-        f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
     query = f"SELECT time, {column_name} FROM kidbright_project ORDER BY time ASC"
-    df = pd.read_sql(query, engine)
+    conn = pool.connection()
+    try:
+        df = pd.read_sql(query, conn)
+    finally:
+        conn.close()
 
     df['time'] = pd.to_datetime(df['time'])
     df.set_index('time', inplace=True)
+
     if column_name == 'temp':
         df = df[(df['temp'] > 10) & (df['temp'] < 45)]
 
@@ -398,6 +399,7 @@ def forecast_data(column_name):
         })
 
     return result
+
 
 
 def forecast_temperature():
@@ -456,41 +458,41 @@ def classify_drying_status(drying_time, weather_condition):
     
 
 def predict_w_condition_next_14_days():
-    encoded_password = quote_plus(DB_PASSWD)
-    engine = create_engine(
-        f'mysql+pymysql://{DB_USER}:{encoded_password}@{DB_HOST}/{DB_NAME}')
-    
-    query = "SELECT temp, wind_kph, humidity, w_condition FROM api_data"
-    df = pd.read_sql(query, engine)
-    df.dropna(inplace=True)
+    conn = pool.connection()
+    try:
+        df = pd.read_sql("SELECT temp, wind_kph, humidity, w_condition FROM api_data", conn)
+        df.dropna(inplace=True)
 
-    le = LabelEncoder()
-    df['w_condition_encoded'] = le.fit_transform(df['w_condition'])
+        le = LabelEncoder()
+        df['w_condition_encoded'] = le.fit_transform(df['w_condition'])
 
-    features = ['temp', 'wind_kph', 'humidity']
-    X = df[features]
-    y = df['w_condition_encoded']
+        features = ['temp', 'wind_kph', 'humidity']
+        X = df[features]
+        y = df['w_condition_encoded']
 
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_scaled, y, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_scaled, y, test_size=0.2, random_state=42)
 
-    knn = KNeighborsClassifier(n_neighbors=3)
-    knn.fit(X_train, y_train)
+        knn = KNeighborsClassifier(n_neighbors=3)
+        knn.fit(X_train, y_train)
 
-    y_pred = knn.predict(X_test)
-    print("Accuracy:", round(accuracy_score(y_test, y_pred), 2))
-    print(classification_report(
-        y_test, y_pred,
-        labels=np.unique(y),
-        target_names=le.classes_,
-        zero_division=0
-    ))
+        y_pred = knn.predict(X_test)
+        print("Accuracy:", round(accuracy_score(y_test, y_pred), 2))
+        print(classification_report(
+            y_test, y_pred,
+            labels=np.unique(y),
+            target_names=le.classes_,
+            zero_division=0
+        ))
 
-    forecast_query = "SELECT time, temp, wind_kph, humidity FROM api_data ORDER BY time ASC"
-    forecast_df = pd.read_sql(forecast_query, engine)
+        forecast_df = pd.read_sql(
+            "SELECT time, temp, wind_kph, humidity FROM api_data ORDER BY time ASC", conn)
+    finally:
+        conn.close()
+
     forecast_df['time'] = pd.to_datetime(forecast_df['time'])
     forecast_df.set_index('time', inplace=True)
 
@@ -535,4 +537,3 @@ def predict_w_condition_next_14_days():
         })
 
     return jsonify(results)
-
