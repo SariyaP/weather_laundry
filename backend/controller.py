@@ -446,6 +446,8 @@ def classify_drying_status(drying_time, weather_condition):
 
     if drying_time <= 2:
         if is_cloudy_or_mist:
+            if weather_condition == "partly cloudy":
+                return "Good"
             return "Moderate"
         else:
             return "Good"
