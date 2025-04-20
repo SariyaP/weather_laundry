@@ -32,19 +32,20 @@ pool = PooledDB(
 )
 
 
-def get_connection():
-    return pool.connection()
-
-
 def get_latest_kidbright_data():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT id, time, temp, light, humidity
-            FROM kidbright_project
-            ORDER BY time DESC
-            LIMIT 1
-        """)
-        result = cs.fetchone()
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT id, time, temp, light, humidity
+                FROM kidbright_project
+                ORDER BY time DESC
+                LIMIT 1
+            """)
+            result = cs.fetchone()
+    finally:
+        conn.close()
+
     if result:
         return models.KidbrightData(*result)
     else:
@@ -52,143 +53,195 @@ def get_latest_kidbright_data():
 
 
 def get_kidbright_data():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT id, time, temp, light, humidity 
-            FROM kidbright_project 
-            ORDER BY time DESC 
-            LIMIT 50
-        """)
-        return [models.KidbrightData(*row) for row in cs.fetchall()]
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT id, time, temp, light, humidity 
+                FROM kidbright_project 
+                ORDER BY time DESC 
+                LIMIT 50
+            """)
+            result = [models.KidbrightData(*row) for row in cs.fetchall()]
+    finally:
+        conn.close()
+    
+    return result
 
 
 def get_kidbright_by_id(data_id):
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT id, time, temp, light, humidity 
-            FROM kidbright_project 
-            WHERE id = %s
-        """, [data_id])
-        row = cs.fetchone()
-        if row:
-            return models.KidbrightData(*row)
-        else:
-            abort(404)
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT id, time, temp, light, humidity 
+                FROM kidbright_project 
+                WHERE id = %s
+            """, [data_id])
+            row = cs.fetchone()
+    finally:
+        conn.close()
+
+    if row:
+        return models.KidbrightData(*row)
+    else:
+        abort(404)
 
 
 def get_kidbright_by_timerange(start, end):
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT id, time, temp, light, humidity 
-            FROM kidbright_project 
-            WHERE time BETWEEN %s AND %s 
-            ORDER BY time ASC
-        """, [start, end])
-        return [models.KidbrightData(*row) for row in cs.fetchall()]
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT id, time, temp, light, humidity 
+                FROM kidbright_project 
+                WHERE time BETWEEN %s AND %s 
+                ORDER BY time ASC
+            """, [start, end])
+            result = [models.KidbrightData(*row) for row in cs.fetchall()]
+    finally:
+        conn.close()
+
+    return result
 
 
 def insert_kidbright_data(temp, light, humidity):
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            INSERT INTO kidbright_project (time, temp, light, humidity)
-            VALUES (NOW(), %s, %s, %s)
-        """, [temp, light, humidity])
-        conn.commit()
-        return {"status": "success", "message": "Data inserted"}
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                INSERT INTO kidbright_project (time, temp, light, humidity)
+                VALUES (NOW(), %s, %s, %s)
+            """, [temp, light, humidity])
+            conn.commit()
+    finally:
+        conn.close()
+    
+    return {"status": "success", "message": "Data inserted"}
 
 
 def get_api_data_latest():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT id, time, temp, wind_kph, humidity, w_condition
-            FROM api_data 
-            ORDER BY time DESC 
-            LIMIT 1
-        """)
-        row = cs.fetchone()
-        if row:
-            return models.ApiData(*row)
-        else:
-            abort(404)
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT id, time, temp, wind_kph, humidity, w_condition
+                FROM api_data 
+                ORDER BY time DESC 
+                LIMIT 1
+            """)
+            row = cs.fetchone()
+    finally:
+        conn.close()
+
+    if row:
+        return models.ApiData(*row)
+    else:
+        abort(404)
 
 
 def get_api_data_by_id(data_id):
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT id, time, temp, wind_kph, humidity, condition 
-            FROM api_data 
-            WHERE id = %s
-        """, [data_id])
-        row = cs.fetchone()
-        if row:
-            return models.ApiData(*row)
-        else:
-            abort(404)
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT id, time, temp, wind_kph, humidity, condition 
+                FROM api_data 
+                WHERE id = %s
+            """, [data_id])
+            row = cs.fetchone()
+    finally:
+        conn.close()
+
+    if row:
+        return models.ApiData(*row)
+    else:
+        abort(404)
 
 
 def get_api_data_by_timerange(start, end):
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT id, time, temp, wind_kph, humidity, condition 
-            FROM api_data 
-            WHERE time BETWEEN %s AND %s 
-            ORDER BY time ASC
-        """, [start, end])
-        return [models.ApiData(*row) for row in cs.fetchall()]
-    
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT id, time, temp, wind_kph, humidity, condition 
+                FROM api_data 
+                WHERE time BETWEEN %s AND %s 
+                ORDER BY time ASC
+            """, [start, end])
+            result = [models.ApiData(*row) for row in cs.fetchall()]
+    finally:
+        conn.close()
 
+    return result
 
 
 def insert_api_data(temp, wind_kph, humidity, condition):
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            INSERT INTO api_data (time, temp, wind_kph, humidity, condition)
-            VALUES (NOW(), %s, %s, %s, %s)
-        """, [temp, wind_kph, humidity, condition])
-        conn.commit()
-        return {"status": "success", "message": "API data inserted"}
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                INSERT INTO api_data (time, temp, wind_kph, humidity, condition)
+                VALUES (NOW(), %s, %s, %s, %s)
+            """, [temp, wind_kph, humidity, condition])
+            conn.commit()
+    finally:
+        conn.close()
+
+    return {"status": "success", "message": "API data inserted"}
 
 
 def get_kidbright_avg():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT 
-                ROUND(AVG(temp), 2), 
-                ROUND(AVG(light), 2), 
-                ROUND(AVG(humidity), 2)
-            FROM kidbright_project
-        """)
-        row = cs.fetchone()
-        return {
-            "avg_temp": row[0],
-            "avg_light": row[1],
-            "avg_humidity": row[2]
-        }
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT 
+                    ROUND(AVG(temp), 2), 
+                    ROUND(AVG(light), 2), 
+                    ROUND(AVG(humidity), 2)
+                FROM kidbright_project
+            """)
+            row = cs.fetchone()
+    finally:
+        conn.close()
+
+    return {
+        "avg_temp": row[0],
+        "avg_light": row[1],
+        "avg_humidity": row[2]
+    }
 
 
 def get_kidbright_min_max():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT 
-                MIN(temp), MAX(temp), 
-                MIN(light), MAX(light), 
-                MIN(humidity), MAX(humidity)
-            FROM kidbright_project
-        """)
-        row = cs.fetchone()
-        return {
-            "min_temp": row[0],
-            "max_temp": row[1],
-            "min_light": row[2],
-            "max_light": row[3],
-            "min_humidity": row[4],
-            "max_humidity": row[5]
-        }
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT 
+                    MIN(temp), MAX(temp), 
+                    MIN(light), MAX(light), 
+                    MIN(humidity), MAX(humidity)
+                FROM kidbright_project
+            """)
+            row = cs.fetchone()
+    finally:
+        conn.close()
+
+    return {
+        "min_temp": row[0],
+        "max_temp": row[1],
+        "min_light": row[2],
+        "max_light": row[3],
+        "min_humidity": row[4],
+        "max_humidity": row[5]
+    }
 
 
 def get_kidbright_hourly_average():
+    conn = pool.connection()
     try:
-        with pool.connection() as conn, conn.cursor() as cs:
+        with conn.cursor() as cs:
             cs.execute("""
                 SELECT 
                     HOUR(time) AS hour,
@@ -201,110 +254,118 @@ def get_kidbright_hourly_average():
                 ORDER BY hour DESC
             """)
             rows = cs.fetchall()
-            if rows:
-                return [
-                    {
-                        "hour": f"{int(row[0]):02d}:00:00",
-                        "avg_temp": row[1],
-                        "avg_light": row[2],
-                        "avg_humidity": row[3]
-                    }
-                    for row in rows
-                ]
-            else:
-                abort(404)
+    finally:
+        conn.close()
 
-    except Exception as e:
-        print("Error:", e)
-        abort(500)
-
+    if rows:
+        return [
+            {
+                "hour": f"{int(row[0]):02d}:00:00",
+                "avg_temp": row[1],
+                "avg_light": row[2],
+                "avg_humidity": row[3]
+            }
+            for row in rows
+        ]
+    else:
+        abort(404)
 
 
 def get_api_data_avg():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT 
-                ROUND(AVG(temp), 2), 
-                ROUND(AVG(wind_kph), 2), 
-                ROUND(AVG(humidity), 2)
-            FROM api_data
-        """)
-        row = cs.fetchone()
-        return {
-            "avg_temp": row[0],
-            "avg_wind": row[1],
-            "avg_humidity": row[2]
-        }
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT 
+                    ROUND(AVG(temp), 2), 
+                    ROUND(AVG(wind_kph), 2), 
+                    ROUND(AVG(humidity), 2)
+                FROM api_data
+            """)
+            row = cs.fetchone()
+    finally:
+        conn.close()
+
+    return {
+        "avg_temp": row[0],
+        "avg_wind": row[1],
+        "avg_humidity": row[2]
+    }
 
 
 def get_api_condition_count():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT condition, COUNT(*) 
-            FROM api_data
-            GROUP BY condition
-            ORDER BY COUNT(*) DESC
-        """)
-        return [
-            {"condition": row[0], "count": row[1]}
-            for row in cs.fetchall()
-        ]
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT condition, COUNT(*) 
+                FROM api_data
+                GROUP BY condition
+                ORDER BY COUNT(*) DESC
+            """)
+            result = [{"condition": row[0], "count": row[1]} for row in cs.fetchall()]
+    finally:
+        conn.close()
+
+    return result
 
 
 def get_api_data_recent_days(days=7):
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT DATE(time) AS day,
-                   ROUND(AVG(temp), 2),
-                   ROUND(AVG(wind_kph), 2),
-                   ROUND(AVG(humidity), 2)
-            FROM api_data
-            WHERE time >= NOW() - INTERVAL %s DAY
-            GROUP BY day
-            ORDER BY day ASC
-        """, [days])
-        return [
-            {
-                "day": str(row[0]),
-                "avg_temp": row[1],
-                "avg_wind": row[2],
-                "avg_humidity": row[3]
-            }
-            for row in cs.fetchall()
-        ]
+    conn = pool.connection()
+    try:
+        with conn.cursor() as cs:
+            cs.execute("""
+                SELECT DATE(time) AS day,
+                       ROUND(AVG(temp), 2),
+                       ROUND(AVG(wind_kph), 2),
+                       ROUND(AVG(humidity), 2)
+                FROM api_data
+                WHERE time >= NOW() - INTERVAL %s DAY
+                GROUP BY day
+                ORDER BY day ASC
+            """, [days])
+            result = [
+                {
+                    "day": str(row[0]),
+                    "avg_temp": row[1],
+                    "avg_wind": row[2],
+                    "avg_humidity": row[3]
+                }
+                for row in cs.fetchall()
+            ]
+    finally:
+        conn.close()
 
+    return result
 
 def get_api_hourly_avg():
+    conn = pool.connection()
     try:
-        with pool.connection() as conn, conn.cursor() as cs:
+        with conn.cursor() as cs:
             cs.execute("""
                 SELECT 
                     HOUR(time) AS hour,
                     ROUND(AVG(temp), 2) AS avg_temp,
-                    ROUND(AVG(wind_kph), 2) AS avg_wind_kph,
+                    ROUND(AVG(wind_kph), 2) AS avg_wind,
                     ROUND(AVG(humidity), 2) AS avg_humidity
                 FROM api_data
                 WHERE time > NOW() - INTERVAL 24 HOUR
-                GROUP BY HOUR(time)
+                GROUP BY hour
                 ORDER BY hour DESC
             """)
-            rows = cs.fetchall()
-            if rows:
-                return [
-                    {
-                        "hour": f"{int(row[0]):02d}:00:00",
-                        "avg_temp": row[1],
-                        "avg_wind_kph": row[2],
-                        "avg_humidity": row[3]
-                    }
-                    for row in rows
-                ]
-            else:
-                abort(404)
+            result = [
+                {
+                    "hour": f"{int(row[0]):02d}:00:00",
+                    "avg_temp": row[1],
+                    "avg_wind": row[2],
+                    "avg_humidity": row[3]
+                }
+                for row in cs.fetchall()
+            ]
+    finally:
+        conn.close()
 
-    except Exception as e:
-        print("Error:", e)
-        abort(500)
+    return result
 
 
 
