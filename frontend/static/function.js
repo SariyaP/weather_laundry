@@ -59,32 +59,3 @@ setInterval(updateDate, 1000);
 
     calendar.render();
   });
-  const ctx = document.getElementById('tempTrendChart').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['05:00', '06:00', '06:01', '07:00', '08:00', '09:00'],
-      datasets: [{
-        data: [28, 28, null, 29, 30, 32],
-        borderColor: '#ffffff',
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        fill: false,
-        tension: 0.3,
-        pointBackgroundColor: '#ffffff',
-        pointRadius: 3,
-        spanGaps: true
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { display: false },
-        x: { display: false }
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
-      }
-    }
-  });
