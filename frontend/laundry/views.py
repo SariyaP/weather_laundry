@@ -27,3 +27,7 @@ def index(request):
         }
 
     return render(request, 'index.html', context)
+
+
+def data_visualization(request):
+    return render(request, 'data_visualization.html')

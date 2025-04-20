@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to map conditions to emoji and color
   function getConditionStyle(condition) {
-    if (!condition) return { title: '❓ Unknown', backgroundColor: '#808080' };
+    if (!condition) return { title: 'Unknown', backgroundColor: '#808080' };
 
     condition = condition.toLowerCase();
     if (condition.includes('sunny')) return { title: '☀️ Sunny', backgroundColor: '#FFD700' };

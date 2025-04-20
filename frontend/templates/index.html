@@ -6,7 +6,7 @@
   <div class="container-fluid">
     <a class="navbar-brand text-white display-4" href="#">Weather & Laundry</a>
     <div class="ms-auto">
-      <button class="btn btn-outline-0 text-white">
+      <button class="btn btn-outline-0 text-white" onclick="window.location.href='/visualization'">
         <i class="bi bi-graph-up"></i>
       </button>
     </div>
@@ -72,8 +72,6 @@
       <div class="card py-3 transparent-background round border-0">
         <h6 class="flex-grow-1 text-white px-4 py-2">Dry Estimator</h6>
         <div class="card-body">
-
-          <!-- Inject weather data into DOM -->
           <div id="weather-data"
                data-temp="{{ current_temp }}"
                data-humidity="{{ humidity }}"
