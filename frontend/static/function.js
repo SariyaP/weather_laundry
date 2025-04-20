@@ -38,7 +38,6 @@ setInterval(updateDate, 1000);
 document.addEventListener('DOMContentLoaded', function () {
   var calendarEl = document.getElementById('weatherCalendar');
 
-  // Function to map conditions to emoji and color
   function getConditionStyle(condition) {
     if (!condition) return { title: 'Unknown', backgroundColor: '#808080' };
 
