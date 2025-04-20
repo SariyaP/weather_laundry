@@ -1,7 +1,7 @@
 import connexion
 import six
 
-from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
+from swagger_server.models.inline_response20011 import InlineResponse20011  # noqa: E501
 from swagger_server import util
 
 
@@ -19,6 +19,6 @@ def controller_estimate_drying_time(temp, humid, wind_kph, width=None):  # noqa:
     :param width: Material thickness (default &#x3D; 2)
     :type width: float
 
-    :rtype: InlineResponse20010
+    :rtype: InlineResponse20011
     """
     return 'do some magic!'

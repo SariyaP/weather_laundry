@@ -135,9 +135,28 @@ def get_api_data_latest():
         conn.close()
 
     if row:
-        return models.ApiData(*row)
+        id, time, temp, wind_kph, humidity, w_condition = row
+
+        try:
+            drying_time = calc_drying_hours(temp, humidity, wind_kph, width=2)
+            drying_status = classify_drying_status(drying_time, w_condition)
+
+            return jsonify({
+                "id": id,
+                "time": time.strftime('%Y-%m-%d %H:%M:%S'),
+                "temp": temp,
+                "wind_kph": wind_kph,
+                "humidity": humidity,
+                "w_condition": w_condition,
+                "estimated_drying_time_hours": round(drying_time, 2),
+                "drying_status": drying_status
+            })
+
+        except Exception as e:
+            abort(400, f"Error calculating drying condition: {str(e)}")
+
     else:
-        abort(404)
+        abort(404, "No API data found.")
 
 
 def get_api_data_by_id(data_id):

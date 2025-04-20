@@ -6,7 +6,6 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.inline_response20010_input import InlineResponse20010Input  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,25 +14,25 @@ class InlineResponse20010(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, estimated_drying_time_hours: int=None, input: InlineResponse20010Input=None):  # noqa: E501
+    def __init__(self, _date: date=None, predicted_light: float=None):  # noqa: E501
         """InlineResponse20010 - a model defined in Swagger
 
-        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20010.  # noqa: E501
-        :type estimated_drying_time_hours: int
-        :param input: The input of this InlineResponse20010.  # noqa: E501
-        :type input: InlineResponse20010Input
+        :param _date: The _date of this InlineResponse20010.  # noqa: E501
+        :type _date: date
+        :param predicted_light: The predicted_light of this InlineResponse20010.  # noqa: E501
+        :type predicted_light: float
         """
         self.swagger_types = {
-            'estimated_drying_time_hours': int,
-            'input': InlineResponse20010Input
+            '_date': date,
+            'predicted_light': float
         }
 
         self.attribute_map = {
-            'estimated_drying_time_hours': 'estimated_drying_time_hours',
-            'input': 'input'
+            '_date': 'date',
+            'predicted_light': 'predicted_light'
         }
-        self._estimated_drying_time_hours = estimated_drying_time_hours
-        self._input = input
+        self.__date = _date
+        self._predicted_light = predicted_light
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse20010':
@@ -47,43 +46,43 @@ class InlineResponse20010(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def estimated_drying_time_hours(self) -> int:
-        """Gets the estimated_drying_time_hours of this InlineResponse20010.
+    def _date(self) -> date:
+        """Gets the _date of this InlineResponse20010.
 
 
-        :return: The estimated_drying_time_hours of this InlineResponse20010.
-        :rtype: int
+        :return: The _date of this InlineResponse20010.
+        :rtype: date
         """
-        return self._estimated_drying_time_hours
+        return self.__date
 
-    @estimated_drying_time_hours.setter
-    def estimated_drying_time_hours(self, estimated_drying_time_hours: int):
-        """Sets the estimated_drying_time_hours of this InlineResponse20010.
+    @_date.setter
+    def _date(self, _date: date):
+        """Sets the _date of this InlineResponse20010.
 
 
-        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20010.
-        :type estimated_drying_time_hours: int
+        :param _date: The _date of this InlineResponse20010.
+        :type _date: date
         """
 
-        self._estimated_drying_time_hours = estimated_drying_time_hours
+        self.__date = _date
 
     @property
-    def input(self) -> InlineResponse20010Input:
-        """Gets the input of this InlineResponse20010.
+    def predicted_light(self) -> float:
+        """Gets the predicted_light of this InlineResponse20010.
 
 
-        :return: The input of this InlineResponse20010.
-        :rtype: InlineResponse20010Input
+        :return: The predicted_light of this InlineResponse20010.
+        :rtype: float
         """
-        return self._input
+        return self._predicted_light
 
-    @input.setter
-    def input(self, input: InlineResponse20010Input):
-        """Sets the input of this InlineResponse20010.
+    @predicted_light.setter
+    def predicted_light(self, predicted_light: float):
+        """Sets the predicted_light of this InlineResponse20010.
 
 
-        :param input: The input of this InlineResponse20010.
-        :type input: InlineResponse20010Input
+        :param predicted_light: The predicted_light of this InlineResponse20010.
+        :type predicted_light: float
         """
 
-        self._input = input
+        self._predicted_light = predicted_light

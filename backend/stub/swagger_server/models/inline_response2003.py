@@ -14,30 +14,55 @@ class InlineResponse2003(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, avg_temp: float=None, avg_wind: float=None, avg_humidity: float=None):  # noqa: E501
+    def __init__(self, id: int=None, time: datetime=None, temp: float=None, wind_kph: float=None, humidity: float=None, w_condition: str=None, estimated_drying_time_hours: float=None, drying_status: str=None):  # noqa: E501
         """InlineResponse2003 - a model defined in Swagger
 
-        :param avg_temp: The avg_temp of this InlineResponse2003.  # noqa: E501
-        :type avg_temp: float
-        :param avg_wind: The avg_wind of this InlineResponse2003.  # noqa: E501
-        :type avg_wind: float
-        :param avg_humidity: The avg_humidity of this InlineResponse2003.  # noqa: E501
-        :type avg_humidity: float
+        :param id: The id of this InlineResponse2003.  # noqa: E501
+        :type id: int
+        :param time: The time of this InlineResponse2003.  # noqa: E501
+        :type time: datetime
+        :param temp: The temp of this InlineResponse2003.  # noqa: E501
+        :type temp: float
+        :param wind_kph: The wind_kph of this InlineResponse2003.  # noqa: E501
+        :type wind_kph: float
+        :param humidity: The humidity of this InlineResponse2003.  # noqa: E501
+        :type humidity: float
+        :param w_condition: The w_condition of this InlineResponse2003.  # noqa: E501
+        :type w_condition: str
+        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse2003.  # noqa: E501
+        :type estimated_drying_time_hours: float
+        :param drying_status: The drying_status of this InlineResponse2003.  # noqa: E501
+        :type drying_status: str
         """
         self.swagger_types = {
-            'avg_temp': float,
-            'avg_wind': float,
-            'avg_humidity': float
+            'id': int,
+            'time': datetime,
+            'temp': float,
+            'wind_kph': float,
+            'humidity': float,
+            'w_condition': str,
+            'estimated_drying_time_hours': float,
+            'drying_status': str
         }
 
         self.attribute_map = {
-            'avg_temp': 'avg_temp',
-            'avg_wind': 'avg_wind',
-            'avg_humidity': 'avg_humidity'
+            'id': 'id',
+            'time': 'time',
+            'temp': 'temp',
+            'wind_kph': 'wind_kph',
+            'humidity': 'humidity',
+            'w_condition': 'w_condition',
+            'estimated_drying_time_hours': 'estimated_drying_time_hours',
+            'drying_status': 'drying_status'
         }
-        self._avg_temp = avg_temp
-        self._avg_wind = avg_wind
-        self._avg_humidity = avg_humidity
+        self._id = id
+        self._time = time
+        self._temp = temp
+        self._wind_kph = wind_kph
+        self._humidity = humidity
+        self._w_condition = w_condition
+        self._estimated_drying_time_hours = estimated_drying_time_hours
+        self._drying_status = drying_status
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2003':
@@ -51,64 +76,175 @@ class InlineResponse2003(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def avg_temp(self) -> float:
-        """Gets the avg_temp of this InlineResponse2003.
+    def id(self) -> int:
+        """Gets the id of this InlineResponse2003.
 
 
-        :return: The avg_temp of this InlineResponse2003.
-        :rtype: float
+        :return: The id of this InlineResponse2003.
+        :rtype: int
         """
-        return self._avg_temp
+        return self._id
 
-    @avg_temp.setter
-    def avg_temp(self, avg_temp: float):
-        """Sets the avg_temp of this InlineResponse2003.
+    @id.setter
+    def id(self, id: int):
+        """Sets the id of this InlineResponse2003.
 
 
-        :param avg_temp: The avg_temp of this InlineResponse2003.
-        :type avg_temp: float
+        :param id: The id of this InlineResponse2003.
+        :type id: int
         """
 
-        self._avg_temp = avg_temp
+        self._id = id
 
     @property
-    def avg_wind(self) -> float:
-        """Gets the avg_wind of this InlineResponse2003.
+    def time(self) -> datetime:
+        """Gets the time of this InlineResponse2003.
 
 
-        :return: The avg_wind of this InlineResponse2003.
-        :rtype: float
+        :return: The time of this InlineResponse2003.
+        :rtype: datetime
         """
-        return self._avg_wind
+        return self._time
 
-    @avg_wind.setter
-    def avg_wind(self, avg_wind: float):
-        """Sets the avg_wind of this InlineResponse2003.
+    @time.setter
+    def time(self, time: datetime):
+        """Sets the time of this InlineResponse2003.
 
 
-        :param avg_wind: The avg_wind of this InlineResponse2003.
-        :type avg_wind: float
+        :param time: The time of this InlineResponse2003.
+        :type time: datetime
         """
 
-        self._avg_wind = avg_wind
+        self._time = time
 
     @property
-    def avg_humidity(self) -> float:
-        """Gets the avg_humidity of this InlineResponse2003.
+    def temp(self) -> float:
+        """Gets the temp of this InlineResponse2003.
 
 
-        :return: The avg_humidity of this InlineResponse2003.
+        :return: The temp of this InlineResponse2003.
         :rtype: float
         """
-        return self._avg_humidity
+        return self._temp
 
-    @avg_humidity.setter
-    def avg_humidity(self, avg_humidity: float):
-        """Sets the avg_humidity of this InlineResponse2003.
+    @temp.setter
+    def temp(self, temp: float):
+        """Sets the temp of this InlineResponse2003.
 
 
-        :param avg_humidity: The avg_humidity of this InlineResponse2003.
-        :type avg_humidity: float
+        :param temp: The temp of this InlineResponse2003.
+        :type temp: float
         """
 
-        self._avg_humidity = avg_humidity
+        self._temp = temp
+
+    @property
+    def wind_kph(self) -> float:
+        """Gets the wind_kph of this InlineResponse2003.
+
+
+        :return: The wind_kph of this InlineResponse2003.
+        :rtype: float
+        """
+        return self._wind_kph
+
+    @wind_kph.setter
+    def wind_kph(self, wind_kph: float):
+        """Sets the wind_kph of this InlineResponse2003.
+
+
+        :param wind_kph: The wind_kph of this InlineResponse2003.
+        :type wind_kph: float
+        """
+
+        self._wind_kph = wind_kph
+
+    @property
+    def humidity(self) -> float:
+        """Gets the humidity of this InlineResponse2003.
+
+
+        :return: The humidity of this InlineResponse2003.
+        :rtype: float
+        """
+        return self._humidity
+
+    @humidity.setter
+    def humidity(self, humidity: float):
+        """Sets the humidity of this InlineResponse2003.
+
+
+        :param humidity: The humidity of this InlineResponse2003.
+        :type humidity: float
+        """
+
+        self._humidity = humidity
+
+    @property
+    def w_condition(self) -> str:
+        """Gets the w_condition of this InlineResponse2003.
+
+
+        :return: The w_condition of this InlineResponse2003.
+        :rtype: str
+        """
+        return self._w_condition
+
+    @w_condition.setter
+    def w_condition(self, w_condition: str):
+        """Sets the w_condition of this InlineResponse2003.
+
+
+        :param w_condition: The w_condition of this InlineResponse2003.
+        :type w_condition: str
+        """
+
+        self._w_condition = w_condition
+
+    @property
+    def estimated_drying_time_hours(self) -> float:
+        """Gets the estimated_drying_time_hours of this InlineResponse2003.
+
+
+        :return: The estimated_drying_time_hours of this InlineResponse2003.
+        :rtype: float
+        """
+        return self._estimated_drying_time_hours
+
+    @estimated_drying_time_hours.setter
+    def estimated_drying_time_hours(self, estimated_drying_time_hours: float):
+        """Sets the estimated_drying_time_hours of this InlineResponse2003.
+
+
+        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse2003.
+        :type estimated_drying_time_hours: float
+        """
+
+        self._estimated_drying_time_hours = estimated_drying_time_hours
+
+    @property
+    def drying_status(self) -> str:
+        """Gets the drying_status of this InlineResponse2003.
+
+
+        :return: The drying_status of this InlineResponse2003.
+        :rtype: str
+        """
+        return self._drying_status
+
+    @drying_status.setter
+    def drying_status(self, drying_status: str):
+        """Sets the drying_status of this InlineResponse2003.
+
+
+        :param drying_status: The drying_status of this InlineResponse2003.
+        :type drying_status: str
+        """
+        allowed_values = ["Good", "Moderate", "Bad"]  # noqa: E501
+        if drying_status not in allowed_values:
+            raise ValueError(
+                "Invalid value for `drying_status` ({0}), must be one of {1}"
+                .format(drying_status, allowed_values)
+            )
+
+        self._drying_status = drying_status
