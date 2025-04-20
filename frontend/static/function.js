@@ -35,27 +35,50 @@ function updateDate() {
 }
 
 setInterval(updateDate, 1000);
-  document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('weatherCalendar');
+document.addEventListener('DOMContentLoaded', function () {
+  var calendarEl = document.getElementById('weatherCalendar');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      headerToolbar: false,
-      dayHeaders: true,
-      height: 'auto',
-      events: [
-        { title: '☀️ Sunny', date: '2025-04-20', backgroundColor: '#FFD700' },
-        { title: '🌧️ Rainy', date: '2025-04-21', backgroundColor: '#00BFFF' },
-        { title: '☁️ Cloudy', date: '2025-04-22', backgroundColor: '#B0C4DE' },
-        { title: '🌩️ Storm', date: '2025-04-23', backgroundColor: '#8B0000' }
-      ],
-      eventDidMount: function(info) {
-        info.el.style.color = 'white';
-        info.el.style.borderRadius = '6px';
-        info.el.style.fontWeight = 'bold';
-        info.el.style.textAlign = 'center';
-      }
+  // Function to map conditions to emoji and color
+  function getConditionStyle(condition) {
+    if (!condition) return { title: '❓ Unknown', backgroundColor: '#808080' };
+
+    condition = condition.toLowerCase();
+    if (condition.includes('sunny')) return { title: '☀️ Sunny', backgroundColor: '#FFD700' };
+    if (condition.includes('rain')) return { title: '🌧️ Rainy', backgroundColor: '#00BFFF' };
+    if (condition.includes('storm')) return { title: '🌩️ Storm', backgroundColor: '#8B0000' };
+    if (condition.includes('cloud')) return { title: '☁️ Cloudy', backgroundColor: '#B0C4DE' };
+    return { title: '⛅ Weather', backgroundColor: '#ADD8E6' };
+  }
+
+  fetch('http://127.0.0.1:8080/laundry-api/v1/forecast-weather-conditions')
+    .then(response => response.json())
+    .then(data => {
+      const events = data.map(entry => {
+        const style = getConditionStyle(entry.predicted_condition);
+        return {
+          title: `${style.title} ${entry.predicted_condition}`,
+          date: entry.date,
+          backgroundColor: style.backgroundColor
+        };
+      });
+
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: false,
+        dayHeaders: true,
+        height: 'auto',
+        events: events,
+        eventDidMount: function (info) {
+          info.el.style.color = 'white';
+          info.el.style.borderRadius = '6px';
+          info.el.style.fontWeight = 'bold';
+          info.el.style.textAlign = 'center';
+        }
+      });
+
+      calendar.render();
+    })
+    .catch(error => {
+      console.error('Error fetching forecast:', error);
     });
-
-    calendar.render();
-  });
+});
