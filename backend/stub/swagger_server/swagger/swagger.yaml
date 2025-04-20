@@ -1,0 +1,683 @@
+openapi: 3.0.0
+info:
+  title: Flask API
+  description: API documentation for KidBright and API data.
+  version: 1.0.0
+servers:
+- url: http://127.0.0.1:8080/laundry-api/v1
+paths:
+  /kidbright/latest:
+    get:
+      summary: Get the latest KidBright data
+      operationId: controller_get_latest_kidbright_data
+      responses:
+        "200":
+          description: Latest KidBright data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KidbrightData"
+        "404":
+          description: Data not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /kidbright:
+    get:
+      summary: Get the last 50 KidBright data entries
+      operationId: controller_get_kidbright_data
+      responses:
+        "200":
+          description: List of KidBright data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KidbrightData"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /kidbright/{data_id}:
+    get:
+      summary: Get KidBright data by ID
+      operationId: controller_get_kidbright_by_id
+      parameters:
+      - name: data_id
+        in: path
+        description: ID of the KidBright data to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: KidBright data by ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KidbrightData"
+        "404":
+          description: Data not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /kidbright/timerange:
+    get:
+      summary: Get KidBright data within a specific time range
+      operationId: controller_get_kidbright_by_timerange
+      parameters:
+      - name: start
+        in: query
+        description: Start time
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        description: End time
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      responses:
+        "200":
+          description: List of KidBright data within the time range
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KidbrightData"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /kidbright/avg:
+    get:
+      summary: Get average values of KidBright data
+      operationId: controller_get_kidbright_avg
+      responses:
+        "200":
+          description: Average values of KidBright data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /kidbright/minmax:
+    get:
+      summary: Get min and max values for KidBright data
+      operationId: controller_get_kidbright_min_max
+      responses:
+        "200":
+          description: Min and max values of KidBright data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_1"
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /kidbright/hourlyavg:
+    get:
+      summary: Get hourly average values for KidBright data
+      operationId: controller_get_kidbright_hourly_average
+      responses:
+        "200":
+          description: Hourly averages for KidBright data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_2"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/latest:
+    get:
+      summary: Get the latest API data
+      operationId: controller_get_api_data_latest
+      responses:
+        "200":
+          description: Latest API data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiData"
+        "404":
+          description: Data not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/{data_id}:
+    get:
+      summary: Get API data by ID
+      operationId: controller_get_api_data_by_id
+      parameters:
+      - name: data_id
+        in: path
+        description: ID of the API data to fetch
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: API data by ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiData"
+        "404":
+          description: Data not found
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/timerange:
+    get:
+      summary: Get API data within a specific time range
+      operationId: controller_get_api_data_by_timerange
+      parameters:
+      - name: start
+        in: query
+        description: Start time
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: end
+        in: query
+        description: End time
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      responses:
+        "200":
+          description: List of API data within the time range
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiData"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/avg:
+    get:
+      summary: Get average values of API data
+      operationId: controller_get_api_data_avg
+      responses:
+        "200":
+          description: Average values of API data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_3"
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/hourly-avg:
+    get:
+      summary: "Retrieve hourly average data for temperature, wind speed, and humidity"
+      description: "Returns the hourly averages for temperature, wind speed, and humidity\
+        \ for the past 24 hours."
+      operationId: controller_get_api_hourly_avg
+      responses:
+        "200":
+          description: "A list of hourly averages for temperature, wind speed, and\
+            \ humidity"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_4"
+                x-content-type: application/json
+        "404":
+          description: No data available for the past 24 hours
+        "500":
+          description: Internal server error
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/conditioncount:
+    get:
+      summary: Get count of each condition for API data
+      operationId: controller_get_api_condition_count
+      responses:
+        "200":
+          description: Count of each weather condition
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_5"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/recentdays:
+    get:
+      summary: Get average data for the last N days
+      operationId: controller_get_api_data_recent_days
+      parameters:
+      - name: days
+        in: query
+        description: Number of days (default is 7)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 7
+      responses:
+        "200":
+          description: Average data for the last N days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_6"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.default_controller
+  /forecast/temperature:
+    get:
+      tags:
+      - Forecast
+      summary: Forecast temperature for the next 14 days
+      operationId: controller_forecast_temperature
+      responses:
+        "200":
+          description: A list of temperature forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_7"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.forecast_controller
+  /forecast/humidity:
+    get:
+      tags:
+      - Forecast
+      summary: Forecast humidity for the next 14 days
+      operationId: controller_forecast_humidity
+      responses:
+        "200":
+          description: A list of humidity forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_8"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.forecast_controller
+  /forecast/light:
+    get:
+      tags:
+      - Forecast
+      summary: Forecast light for the next 14 days
+      operationId: controller_forecast_light
+      responses:
+        "200":
+          description: A list of light forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_9"
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.forecast_controller
+  /estimate-drying-time:
+    get:
+      tags:
+      - Estimation
+      summary: "Estimate drying time based on temperature, humidity, and wind."
+      operationId: controller_estimate_drying_time
+      parameters:
+      - name: temp
+        in: query
+        description: Temperature in Celsius
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: humid
+        in: query
+        description: Relative humidity (0-100)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: wind_kph
+        in: query
+        description: Wind speed in km/h
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: width
+        in: query
+        description: Material thickness (default = 2)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: number
+          default: 2
+      responses:
+        "200":
+          description: Drying time estimation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_10"
+        "400":
+          description: Invalid input
+      x-openapi-router-controller: swagger_server.controllers.estimation_controller
+  /forecast-weather-conditions:
+    get:
+      tags:
+      - Forecast
+      summary: Forecast weather conditions for the next 14 days
+      description: "Uses historical data and machine learning to predict daily weather\
+        \ conditions (e.g., sunny, cloudy, rain) for the next 14 days."
+      operationId: controller_predict_w_condition_next_14_days
+      responses:
+        "200":
+          description: 14-day drying forecast with condition and status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_11"
+                x-content-type: application/json
+        "500":
+          description: Internal server error
+      x-openapi-router-controller: swagger_server.controllers.forecast_controller
+components:
+  schemas:
+    KidbrightData:
+      type: object
+      properties:
+        id:
+          type: integer
+        time:
+          type: string
+          format: date-time
+        temp:
+          type: number
+          format: float
+        light:
+          type: number
+          format: float
+        humidity:
+          type: number
+          format: float
+      example:
+        temp: 6.0274563
+        light: 1.4658129
+        humidity: 5.962134
+        id: 0
+        time: 2000-01-23T04:56:07.000+00:00
+    ApiData:
+      type: object
+      properties:
+        id:
+          type: integer
+        time:
+          type: string
+          format: date-time
+        temp:
+          type: number
+          format: float
+        wind_kph:
+          type: number
+          format: float
+        humidity:
+          type: number
+          format: float
+        condition:
+          type: string
+      example:
+        wind_kph: 1.4658129
+        temp: 6.0274563
+        condition: condition
+        humidity: 5.962134
+        id: 0
+        time: 2000-01-23T04:56:07.000+00:00
+    inline_response_200:
+      type: object
+      properties:
+        avg_temp:
+          type: number
+          format: float
+        avg_light:
+          type: number
+          format: float
+        avg_humidity:
+          type: number
+          format: float
+      example:
+        avg_light: 6.0274563
+        avg_temp: 0.8008282
+        avg_humidity: 1.4658129
+    inline_response_200_1:
+      type: object
+      properties:
+        min_temp:
+          type: number
+          format: float
+        max_temp:
+          type: number
+          format: float
+        min_light:
+          type: number
+          format: float
+        max_light:
+          type: number
+          format: float
+        min_humidity:
+          type: number
+          format: float
+        max_humidity:
+          type: number
+          format: float
+      example:
+        min_light: 1.4658129
+        min_temp: 0.8008282
+        max_humidity: 2.302136
+        max_light: 5.962134
+        max_temp: 6.0274563
+        min_humidity: 5.637377
+    inline_response_200_2:
+      type: object
+      properties:
+        hour:
+          type: integer
+        avg_temp:
+          type: number
+          format: float
+        avg_light:
+          type: number
+          format: float
+        avg_humidity:
+          type: number
+          format: float
+      example:
+        avg_light: 1.4658129
+        hour: 0
+        avg_temp: 6.0274563
+        avg_humidity: 5.962134
+    inline_response_200_3:
+      type: object
+      properties:
+        avg_temp:
+          type: number
+          format: float
+        avg_wind:
+          type: number
+          format: float
+        avg_humidity:
+          type: number
+          format: float
+      example:
+        avg_wind: 6.0274563
+        avg_temp: 0.8008282
+        avg_humidity: 1.4658129
+    inline_response_200_4:
+      type: object
+      properties:
+        hour:
+          type: string
+          description: The hour of the day in HH:00:00 format
+          example: 10:00:00
+        avg_temp:
+          type: number
+          description: The average temperature for the hour
+          format: float
+          example: 30.4
+        avg_wind_kph:
+          type: number
+          description: The average wind speed in kilometers per hour for the hour
+          format: float
+          example: 12.5
+        avg_humidity:
+          type: number
+          description: The average humidity percentage for the hour
+          format: float
+          example: 58.1
+      example:
+        avg_wind_kph: 12.5
+        hour: 10:00:00
+        avg_temp: 30.4
+        avg_humidity: 58.1
+    inline_response_200_5:
+      type: object
+      properties:
+        condition:
+          type: string
+        count:
+          type: integer
+      example:
+        condition: condition
+        count: 0
+    inline_response_200_6:
+      type: object
+      properties:
+        day:
+          type: string
+        avg_temp:
+          type: number
+          format: float
+        avg_wind:
+          type: number
+          format: float
+        avg_humidity:
+          type: number
+          format: float
+      example:
+        avg_wind: 6.0274563
+        avg_temp: 0.8008282
+        avg_humidity: 1.4658129
+        day: day
+    inline_response_200_7:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        predicted_temp:
+          type: number
+          format: float
+      example:
+        date: 2000-01-23
+        predicted_temp: 0.8008282
+    inline_response_200_8:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        predicted_humidity:
+          type: number
+          format: float
+      example:
+        date: 2000-01-23
+        predicted_humidity: 0.8008282
+    inline_response_200_9:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        predicted_light:
+          type: number
+          format: float
+      example:
+        date: 2000-01-23
+        predicted_light: 0.8008282
+    inline_response_200_10:
+      type: object
+      properties:
+        estimated_drying_time_hours:
+          type: integer
+        input:
+          $ref: "#/components/schemas/inline_response_200_10_input"
+      example:
+        input:
+          wind_kph: 5.962133916683182
+          temp: 6.027456183070403
+          width: 5.637376656633329
+          humidity: 1.4658129805029452
+        estimated_drying_time_hours: 0
+    inline_response_200_11:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        temp:
+          type: number
+        wind_kph:
+          type: number
+        humidity:
+          type: number
+        predicted_condition:
+          type: string
+        estimated_drying_time_hours:
+          type: number
+        drying_status:
+          type: string
+          enum:
+          - Good
+          - Moderate
+          - Bad
+      example:
+        date: 2000-01-23
+        wind_kph: 6.027456183070403
+        temp: 0.8008281904610115
+        humidity: 1.4658129805029452
+        drying_status: Good
+        predicted_condition: predicted_condition
+        estimated_drying_time_hours: 5.962133916683182
+    inline_response_200_10_input:
+      type: object
+      properties:
+        temp:
+          type: number
+        humidity:
+          type: number
+        wind_kph:
+          type: number
+        width:
+          type: number
+      example:
+        wind_kph: 5.962133916683182
+        temp: 6.027456183070403
+        width: 5.637376656633329
+        humidity: 1.4658129805029452
+

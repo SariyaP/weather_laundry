@@ -136,7 +136,6 @@ paths:
                   max_humidity:
                     type: number
                     format: float
-
   /kidbright/hourlyavg:
     get:
       summary: Get hourly average values for KidBright data
@@ -161,8 +160,7 @@ paths:
                       format: float
                     avg_humidity:
                       type: number
-                      format: float
-
+                      format: float                
   /api/latest:
     get:
       summary: Get the latest API data
@@ -248,6 +246,44 @@ paths:
                   avg_humidity:
                     type: number
                     format: float
+  /api/hourly-avg:
+    get:
+      summary: "Retrieve hourly average data for temperature, wind speed, and humidity"
+      operationId: controller.get_api_hourly_avg
+      description: "Returns the hourly averages for temperature, wind speed, and humidity for the past 24 hours."
+      responses:
+        '200':
+          description: "A list of hourly averages for temperature, wind speed, and humidity"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    hour:
+                      type: string
+                      description: "The hour of the day in HH:00:00 format"
+                      example: "10:00:00"
+                    avg_temp:
+                      type: number
+                      format: float
+                      description: "The average temperature for the hour"
+                      example: 30.4
+                    avg_wind_kph:
+                      type: number
+                      format: float
+                      description: "The average wind speed in kilometers per hour for the hour"
+                      example: 12.5
+                    avg_humidity:
+                      type: number
+                      format: float
+                      description: "The average humidity percentage for the hour"
+                      example: 58.1
+        '404':
+          description: "No data available for the past 24 hours"
+        '500':
+          description: "Internal server error"
 
   /api/conditioncount:
     get:
@@ -302,6 +338,164 @@ paths:
                       type: number
                       format: float
 
+  /forecast/temperature:
+    get:
+      summary: Forecast temperature for the next 14 days
+      operationId: controller.forecast_temperature
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: A list of temperature forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    predicted_temp:
+                      type: number
+                      format: float
+
+  /forecast/humidity:
+    get:
+      summary: Forecast humidity for the next 14 days
+      operationId: controller.forecast_humidity
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: A list of humidity forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    predicted_humidity:
+                      type: number
+                      format: float
+
+  /forecast/light:
+    get:
+      summary: Forecast light for the next 14 days
+      operationId: controller.forecast_light
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: A list of light forecasts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    predicted_light:
+                      type: number
+                      format: float
+  /estimate-drying-time:
+    get:
+      summary: Estimate drying time based on temperature, humidity, and wind.
+      operationId: controller.estimate_drying_time
+      tags:
+        - Estimation
+      parameters:
+        - name: temp
+          in: query
+          description: Temperature in Celsius
+          required: true
+          schema:
+            type: number
+        - name: humid
+          in: query
+          description: Relative humidity (0-100)
+          required: true
+          schema:
+            type: number
+        - name: wind_kph
+          in: query
+          description: Wind speed in km/h
+          required: true
+          schema:
+            type: number
+        - name: width
+          in: query
+          description: Material thickness (default = 2)
+          required: false
+          schema:
+            type: number
+            default: 2
+      responses:
+        '200':
+          description: Drying time estimation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estimated_drying_time_hours:
+                    type: integer
+                  input:
+                    type: object
+                    properties:
+                      temp:
+                        type: number
+                      humidity:
+                        type: number
+                      wind_kph:
+                        type: number
+                      width:
+                        type: number
+        '400':
+          description: Invalid input
+  /forecast-weather-conditions:
+    get:
+      summary: Forecast weather conditions for the next 14 days
+      operationId: controller.predict_w_condition_next_14_days
+      description: Uses historical data and machine learning to predict daily weather conditions (e.g., sunny, cloudy, rain) for the next 14 days.
+      tags:
+        - Forecast
+      responses:
+        200:
+          description: 14-day drying forecast with condition and status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    temp:
+                      type: number
+                    wind_kph:
+                      type: number
+                    humidity:
+                      type: number
+                    predicted_condition:
+                      type: string
+                    estimated_drying_time_hours:
+                      type: number
+                    drying_status:
+                      type: string
+                      enum: [Good, Moderate, Bad]
+        '500':
+          description: Internal server error
 components:
   schemas:
     KidbrightData:
@@ -321,7 +515,6 @@ components:
         humidity:
           type: number
           format: float
-
     ApiData:
       type: object
       properties:
