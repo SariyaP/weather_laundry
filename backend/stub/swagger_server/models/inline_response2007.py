@@ -14,25 +14,25 @@ class InlineResponse2007(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, _date: date=None, predicted_humidity: float=None):  # noqa: E501
+    def __init__(self, _date: date=None, predicted_temp: float=None):  # noqa: E501
         """InlineResponse2007 - a model defined in Swagger
 
         :param _date: The _date of this InlineResponse2007.  # noqa: E501
         :type _date: date
-        :param predicted_humidity: The predicted_humidity of this InlineResponse2007.  # noqa: E501
-        :type predicted_humidity: float
+        :param predicted_temp: The predicted_temp of this InlineResponse2007.  # noqa: E501
+        :type predicted_temp: float
         """
         self.swagger_types = {
             '_date': date,
-            'predicted_humidity': float
+            'predicted_temp': float
         }
 
         self.attribute_map = {
             '_date': 'date',
-            'predicted_humidity': 'predicted_humidity'
+            'predicted_temp': 'predicted_temp'
         }
         self.__date = _date
-        self._predicted_humidity = predicted_humidity
+        self._predicted_temp = predicted_temp
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2007':
@@ -67,22 +67,22 @@ class InlineResponse2007(Model):
         self.__date = _date
 
     @property
-    def predicted_humidity(self) -> float:
-        """Gets the predicted_humidity of this InlineResponse2007.
+    def predicted_temp(self) -> float:
+        """Gets the predicted_temp of this InlineResponse2007.
 
 
-        :return: The predicted_humidity of this InlineResponse2007.
+        :return: The predicted_temp of this InlineResponse2007.
         :rtype: float
         """
-        return self._predicted_humidity
+        return self._predicted_temp
 
-    @predicted_humidity.setter
-    def predicted_humidity(self, predicted_humidity: float):
-        """Sets the predicted_humidity of this InlineResponse2007.
+    @predicted_temp.setter
+    def predicted_temp(self, predicted_temp: float):
+        """Sets the predicted_temp of this InlineResponse2007.
 
 
-        :param predicted_humidity: The predicted_humidity of this InlineResponse2007.
-        :type predicted_humidity: float
+        :param predicted_temp: The predicted_temp of this InlineResponse2007.
+        :type predicted_temp: float
         """
 
-        self._predicted_humidity = predicted_humidity
+        self._predicted_temp = predicted_temp

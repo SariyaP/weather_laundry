@@ -14,7 +14,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sqlalchemy import create_engine
 from statsmodels.tsa.arima.model import ARIMA
-
+from stub.swagger_server.models.api_data import ApiData
 from config import *
 from dry_estimator import calc_drying_hours
 
@@ -100,7 +100,7 @@ def insert_kidbright_data(temp, light, humidity):
 def get_api_data_latest():
     with pool.connection() as conn, conn.cursor() as cs:
         cs.execute("""
-            SELECT id, time, temp, wind_kph, humidity, condition 
+            SELECT id, time, temp, wind_kph, humidity, w_condition
             FROM api_data 
             ORDER BY time DESC 
             LIMIT 1
@@ -187,26 +187,37 @@ def get_kidbright_min_max():
 
 
 def get_kidbright_hourly_average():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT 
-                HOUR(time) AS hour,
-                ROUND(AVG(temp), 2),
-                ROUND(AVG(light), 2),
-                ROUND(AVG(humidity), 2)
-            FROM kidbright_project
-            GROUP BY HOUR(time)
-            ORDER BY hour
-        """)
-        return [
-            {
-                "hour": row[0],
-                "avg_temp": row[1],
-                "avg_light": row[2],
-                "avg_humidity": row[3]
-            }
-            for row in cs.fetchall()
-        ]
+    try:
+        with pool.connection() as conn, conn.cursor() as cs:
+            cs.execute("""
+                SELECT 
+                    HOUR(time) AS hour,
+                    ROUND(AVG(temp), 2) AS avg_temp,
+                    ROUND(AVG(light), 2) AS avg_light,
+                    ROUND(AVG(humidity), 2) AS avg_humidity
+                FROM kidbright_project
+                WHERE time > NOW() - INTERVAL 24 HOUR
+                GROUP BY HOUR(time)
+                ORDER BY hour DESC
+            """)
+            rows = cs.fetchall()
+            if rows:
+                return [
+                    {
+                        "hour": f"{int(row[0]):02d}:00:00",
+                        "avg_temp": row[1],
+                        "avg_light": row[2],
+                        "avg_humidity": row[3]
+                    }
+                    for row in rows
+                ]
+            else:
+                abort(404)
+
+    except Exception as e:
+        print("Error:", e)
+        abort(500)
+
 
 
 def get_api_data_avg():
@@ -261,28 +272,40 @@ def get_api_data_recent_days(days=7):
             }
             for row in cs.fetchall()
         ]
-    
-def get_past_24_hours_avg():
-    with pool.connection() as conn, conn.cursor() as cs:
-        cs.execute("""
-            SELECT 
-                HOUR(time) AS hour, 
-                AVG(temp) AS avg_temp, 
-                AVG(wind_kph) AS avg_wind_kph, 
-                AVG(humidity) AS avg_humidity
-            FROM api_data
-            WHERE time > NOW() - INTERVAL 24 HOUR
-            GROUP BY HOUR(time)
-            ORDER BY hour DESC
-        """)
-        rows = cs.fetchall()
-        if rows:
-            return [
-                models.ApiDataAvg(hour=row[0], avg_temp=row[1], avg_wind_kph=row[2], avg_humidity=row[3])
-                for row in rows
-            ]
-        else:
-            abort(404)
+
+
+def get_api_hourly_avg():
+    try:
+        with pool.connection() as conn, conn.cursor() as cs:
+            cs.execute("""
+                SELECT 
+                    HOUR(time) AS hour,
+                    ROUND(AVG(temp), 2) AS avg_temp,
+                    ROUND(AVG(wind_kph), 2) AS avg_wind_kph,
+                    ROUND(AVG(humidity), 2) AS avg_humidity
+                FROM api_data
+                WHERE time > NOW() - INTERVAL 24 HOUR
+                GROUP BY HOUR(time)
+                ORDER BY hour DESC
+            """)
+            rows = cs.fetchall()
+            if rows:
+                return [
+                    {
+                        "hour": f"{int(row[0]):02d}:00:00",
+                        "avg_temp": row[1],
+                        "avg_wind_kph": row[2],
+                        "avg_humidity": row[3]
+                    }
+                    for row in rows
+                ]
+            else:
+                abort(404)
+
+    except Exception as e:
+        print("Error:", e)
+        abort(500)
+
 
 
 def forecast_data(column_name):
@@ -449,3 +472,4 @@ def predict_w_condition_next_14_days():
         })
 
     return jsonify(results)
+

@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.inline_response20010_input import InlineResponse20010Input  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -14,50 +15,25 @@ class InlineResponse20010(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, _date: date=None, temp: float=None, wind_kph: float=None, humidity: float=None, predicted_condition: str=None, estimated_drying_time_hours: float=None, drying_status: str=None):  # noqa: E501
+    def __init__(self, estimated_drying_time_hours: int=None, input: InlineResponse20010Input=None):  # noqa: E501
         """InlineResponse20010 - a model defined in Swagger
 
-        :param _date: The _date of this InlineResponse20010.  # noqa: E501
-        :type _date: date
-        :param temp: The temp of this InlineResponse20010.  # noqa: E501
-        :type temp: float
-        :param wind_kph: The wind_kph of this InlineResponse20010.  # noqa: E501
-        :type wind_kph: float
-        :param humidity: The humidity of this InlineResponse20010.  # noqa: E501
-        :type humidity: float
-        :param predicted_condition: The predicted_condition of this InlineResponse20010.  # noqa: E501
-        :type predicted_condition: str
         :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20010.  # noqa: E501
-        :type estimated_drying_time_hours: float
-        :param drying_status: The drying_status of this InlineResponse20010.  # noqa: E501
-        :type drying_status: str
+        :type estimated_drying_time_hours: int
+        :param input: The input of this InlineResponse20010.  # noqa: E501
+        :type input: InlineResponse20010Input
         """
         self.swagger_types = {
-            '_date': date,
-            'temp': float,
-            'wind_kph': float,
-            'humidity': float,
-            'predicted_condition': str,
-            'estimated_drying_time_hours': float,
-            'drying_status': str
+            'estimated_drying_time_hours': int,
+            'input': InlineResponse20010Input
         }
 
         self.attribute_map = {
-            '_date': 'date',
-            'temp': 'temp',
-            'wind_kph': 'wind_kph',
-            'humidity': 'humidity',
-            'predicted_condition': 'predicted_condition',
             'estimated_drying_time_hours': 'estimated_drying_time_hours',
-            'drying_status': 'drying_status'
+            'input': 'input'
         }
-        self.__date = _date
-        self._temp = temp
-        self._wind_kph = wind_kph
-        self._humidity = humidity
-        self._predicted_condition = predicted_condition
         self._estimated_drying_time_hours = estimated_drying_time_hours
-        self._drying_status = drying_status
+        self._input = input
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse20010':
@@ -71,154 +47,43 @@ class InlineResponse20010(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def _date(self) -> date:
-        """Gets the _date of this InlineResponse20010.
-
-
-        :return: The _date of this InlineResponse20010.
-        :rtype: date
-        """
-        return self.__date
-
-    @_date.setter
-    def _date(self, _date: date):
-        """Sets the _date of this InlineResponse20010.
-
-
-        :param _date: The _date of this InlineResponse20010.
-        :type _date: date
-        """
-
-        self.__date = _date
-
-    @property
-    def temp(self) -> float:
-        """Gets the temp of this InlineResponse20010.
-
-
-        :return: The temp of this InlineResponse20010.
-        :rtype: float
-        """
-        return self._temp
-
-    @temp.setter
-    def temp(self, temp: float):
-        """Sets the temp of this InlineResponse20010.
-
-
-        :param temp: The temp of this InlineResponse20010.
-        :type temp: float
-        """
-
-        self._temp = temp
-
-    @property
-    def wind_kph(self) -> float:
-        """Gets the wind_kph of this InlineResponse20010.
-
-
-        :return: The wind_kph of this InlineResponse20010.
-        :rtype: float
-        """
-        return self._wind_kph
-
-    @wind_kph.setter
-    def wind_kph(self, wind_kph: float):
-        """Sets the wind_kph of this InlineResponse20010.
-
-
-        :param wind_kph: The wind_kph of this InlineResponse20010.
-        :type wind_kph: float
-        """
-
-        self._wind_kph = wind_kph
-
-    @property
-    def humidity(self) -> float:
-        """Gets the humidity of this InlineResponse20010.
-
-
-        :return: The humidity of this InlineResponse20010.
-        :rtype: float
-        """
-        return self._humidity
-
-    @humidity.setter
-    def humidity(self, humidity: float):
-        """Sets the humidity of this InlineResponse20010.
-
-
-        :param humidity: The humidity of this InlineResponse20010.
-        :type humidity: float
-        """
-
-        self._humidity = humidity
-
-    @property
-    def predicted_condition(self) -> str:
-        """Gets the predicted_condition of this InlineResponse20010.
-
-
-        :return: The predicted_condition of this InlineResponse20010.
-        :rtype: str
-        """
-        return self._predicted_condition
-
-    @predicted_condition.setter
-    def predicted_condition(self, predicted_condition: str):
-        """Sets the predicted_condition of this InlineResponse20010.
-
-
-        :param predicted_condition: The predicted_condition of this InlineResponse20010.
-        :type predicted_condition: str
-        """
-
-        self._predicted_condition = predicted_condition
-
-    @property
-    def estimated_drying_time_hours(self) -> float:
+    def estimated_drying_time_hours(self) -> int:
         """Gets the estimated_drying_time_hours of this InlineResponse20010.
 
 
         :return: The estimated_drying_time_hours of this InlineResponse20010.
-        :rtype: float
+        :rtype: int
         """
         return self._estimated_drying_time_hours
 
     @estimated_drying_time_hours.setter
-    def estimated_drying_time_hours(self, estimated_drying_time_hours: float):
+    def estimated_drying_time_hours(self, estimated_drying_time_hours: int):
         """Sets the estimated_drying_time_hours of this InlineResponse20010.
 
 
         :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20010.
-        :type estimated_drying_time_hours: float
+        :type estimated_drying_time_hours: int
         """
 
         self._estimated_drying_time_hours = estimated_drying_time_hours
 
     @property
-    def drying_status(self) -> str:
-        """Gets the drying_status of this InlineResponse20010.
+    def input(self) -> InlineResponse20010Input:
+        """Gets the input of this InlineResponse20010.
 
 
-        :return: The drying_status of this InlineResponse20010.
-        :rtype: str
+        :return: The input of this InlineResponse20010.
+        :rtype: InlineResponse20010Input
         """
-        return self._drying_status
+        return self._input
 
-    @drying_status.setter
-    def drying_status(self, drying_status: str):
-        """Sets the drying_status of this InlineResponse20010.
+    @input.setter
+    def input(self, input: InlineResponse20010Input):
+        """Sets the input of this InlineResponse20010.
 
 
-        :param drying_status: The drying_status of this InlineResponse20010.
-        :type drying_status: str
+        :param input: The input of this InlineResponse20010.
+        :type input: InlineResponse20010Input
         """
-        allowed_values = ["Good", "Moderate", "Bad"]  # noqa: E501
-        if drying_status not in allowed_values:
-            raise ValueError(
-                "Invalid value for `drying_status` ({0}), must be one of {1}"
-                .format(drying_status, allowed_values)
-            )
 
-        self._drying_status = drying_status
+        self._input = input

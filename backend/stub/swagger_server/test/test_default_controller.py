@@ -12,6 +12,7 @@ from swagger_server.models.inline_response2002 import InlineResponse2002  # noqa
 from swagger_server.models.inline_response2003 import InlineResponse2003  # noqa: E501
 from swagger_server.models.inline_response2004 import InlineResponse2004  # noqa: E501
 from swagger_server.models.inline_response2005 import InlineResponse2005  # noqa: E501
+from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
 from swagger_server.models.kidbright_data import KidbrightData  # noqa: E501
 from swagger_server.test import BaseTestCase
 
@@ -87,6 +88,17 @@ class TestDefaultController(BaseTestCase):
             '/laundry-api/v1/api/recentdays',
             method='GET',
             query_string=query_string)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_controller_get_api_hourly_avg(self):
+        """Test case for controller_get_api_hourly_avg
+
+        Retrieve hourly average data for temperature, wind speed, and humidity
+        """
+        response = self.client.open(
+            '/laundry-api/v1/api/hourly-avg',
+            method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 

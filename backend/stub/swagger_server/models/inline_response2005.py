@@ -14,35 +14,25 @@ class InlineResponse2005(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, day: str=None, avg_temp: float=None, avg_wind: float=None, avg_humidity: float=None):  # noqa: E501
+    def __init__(self, condition: str=None, count: int=None):  # noqa: E501
         """InlineResponse2005 - a model defined in Swagger
 
-        :param day: The day of this InlineResponse2005.  # noqa: E501
-        :type day: str
-        :param avg_temp: The avg_temp of this InlineResponse2005.  # noqa: E501
-        :type avg_temp: float
-        :param avg_wind: The avg_wind of this InlineResponse2005.  # noqa: E501
-        :type avg_wind: float
-        :param avg_humidity: The avg_humidity of this InlineResponse2005.  # noqa: E501
-        :type avg_humidity: float
+        :param condition: The condition of this InlineResponse2005.  # noqa: E501
+        :type condition: str
+        :param count: The count of this InlineResponse2005.  # noqa: E501
+        :type count: int
         """
         self.swagger_types = {
-            'day': str,
-            'avg_temp': float,
-            'avg_wind': float,
-            'avg_humidity': float
+            'condition': str,
+            'count': int
         }
 
         self.attribute_map = {
-            'day': 'day',
-            'avg_temp': 'avg_temp',
-            'avg_wind': 'avg_wind',
-            'avg_humidity': 'avg_humidity'
+            'condition': 'condition',
+            'count': 'count'
         }
-        self._day = day
-        self._avg_temp = avg_temp
-        self._avg_wind = avg_wind
-        self._avg_humidity = avg_humidity
+        self._condition = condition
+        self._count = count
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2005':
@@ -56,85 +46,43 @@ class InlineResponse2005(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def day(self) -> str:
-        """Gets the day of this InlineResponse2005.
+    def condition(self) -> str:
+        """Gets the condition of this InlineResponse2005.
 
 
-        :return: The day of this InlineResponse2005.
+        :return: The condition of this InlineResponse2005.
         :rtype: str
         """
-        return self._day
+        return self._condition
 
-    @day.setter
-    def day(self, day: str):
-        """Sets the day of this InlineResponse2005.
+    @condition.setter
+    def condition(self, condition: str):
+        """Sets the condition of this InlineResponse2005.
 
 
-        :param day: The day of this InlineResponse2005.
-        :type day: str
+        :param condition: The condition of this InlineResponse2005.
+        :type condition: str
         """
 
-        self._day = day
+        self._condition = condition
 
     @property
-    def avg_temp(self) -> float:
-        """Gets the avg_temp of this InlineResponse2005.
+    def count(self) -> int:
+        """Gets the count of this InlineResponse2005.
 
 
-        :return: The avg_temp of this InlineResponse2005.
-        :rtype: float
+        :return: The count of this InlineResponse2005.
+        :rtype: int
         """
-        return self._avg_temp
+        return self._count
 
-    @avg_temp.setter
-    def avg_temp(self, avg_temp: float):
-        """Sets the avg_temp of this InlineResponse2005.
-
-
-        :param avg_temp: The avg_temp of this InlineResponse2005.
-        :type avg_temp: float
-        """
-
-        self._avg_temp = avg_temp
-
-    @property
-    def avg_wind(self) -> float:
-        """Gets the avg_wind of this InlineResponse2005.
+    @count.setter
+    def count(self, count: int):
+        """Sets the count of this InlineResponse2005.
 
 
-        :return: The avg_wind of this InlineResponse2005.
-        :rtype: float
-        """
-        return self._avg_wind
-
-    @avg_wind.setter
-    def avg_wind(self, avg_wind: float):
-        """Sets the avg_wind of this InlineResponse2005.
-
-
-        :param avg_wind: The avg_wind of this InlineResponse2005.
-        :type avg_wind: float
+        :param count: The count of this InlineResponse2005.
+        :type count: int
         """
 
-        self._avg_wind = avg_wind
-
-    @property
-    def avg_humidity(self) -> float:
-        """Gets the avg_humidity of this InlineResponse2005.
-
-
-        :return: The avg_humidity of this InlineResponse2005.
-        :rtype: float
-        """
-        return self._avg_humidity
-
-    @avg_humidity.setter
-    def avg_humidity(self, avg_humidity: float):
-        """Sets the avg_humidity of this InlineResponse2005.
-
-
-        :param avg_humidity: The avg_humidity of this InlineResponse2005.
-        :type avg_humidity: float
-        """
-
-        self._avg_humidity = avg_humidity
+        self._count = count

@@ -214,6 +214,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/inline_response_200_3"
       x-openapi-router-controller: swagger_server.controllers.default_controller
+  /api/hourly-avg:
+    get:
+      summary: "Retrieve hourly average data for temperature, wind speed, and humidity"
+      description: "Returns the hourly averages for temperature, wind speed, and humidity\
+        \ for the past 24 hours."
+      operationId: controller_get_api_hourly_avg
+      responses:
+        "200":
+          description: "A list of hourly averages for temperature, wind speed, and\
+            \ humidity"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200_4"
+                x-content-type: application/json
+        "404":
+          description: No data available for the past 24 hours
+        "500":
+          description: Internal server error
+      x-openapi-router-controller: swagger_server.controllers.default_controller
   /api/conditioncount:
     get:
       summary: Get count of each condition for API data
@@ -226,7 +248,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/inline_response_200_4"
+                  $ref: "#/components/schemas/inline_response_200_5"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.default_controller
   /api/recentdays:
@@ -251,7 +273,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/inline_response_200_5"
+                  $ref: "#/components/schemas/inline_response_200_6"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.default_controller
   /forecast/temperature:
@@ -268,7 +290,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/inline_response_200_6"
+                  $ref: "#/components/schemas/inline_response_200_7"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.forecast_controller
   /forecast/humidity:
@@ -285,7 +307,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/inline_response_200_7"
+                  $ref: "#/components/schemas/inline_response_200_8"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.forecast_controller
   /forecast/light:
@@ -302,7 +324,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/inline_response_200_8"
+                  $ref: "#/components/schemas/inline_response_200_9"
                 x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.forecast_controller
   /estimate-drying-time:
@@ -351,7 +373,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inline_response_200_9"
+                $ref: "#/components/schemas/inline_response_200_10"
         "400":
           description: Invalid input
       x-openapi-router-controller: swagger_server.controllers.estimation_controller
@@ -371,7 +393,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/inline_response_200_10"
+                  $ref: "#/components/schemas/inline_response_200_11"
                 x-content-type: application/json
         "500":
           description: Internal server error
@@ -509,6 +531,33 @@ components:
     inline_response_200_4:
       type: object
       properties:
+        hour:
+          type: string
+          description: The hour of the day in HH:00:00 format
+          example: 10:00:00
+        avg_temp:
+          type: number
+          description: The average temperature for the hour
+          format: float
+          example: 30.4
+        avg_wind_kph:
+          type: number
+          description: The average wind speed in kilometers per hour for the hour
+          format: float
+          example: 12.5
+        avg_humidity:
+          type: number
+          description: The average humidity percentage for the hour
+          format: float
+          example: 58.1
+      example:
+        avg_wind_kph: 12.5
+        hour: 10:00:00
+        avg_temp: 30.4
+        avg_humidity: 58.1
+    inline_response_200_5:
+      type: object
+      properties:
         condition:
           type: string
         count:
@@ -516,7 +565,7 @@ components:
       example:
         condition: condition
         count: 0
-    inline_response_200_5:
+    inline_response_200_6:
       type: object
       properties:
         day:
@@ -535,7 +584,7 @@ components:
         avg_temp: 0.8008282
         avg_humidity: 1.4658129
         day: day
-    inline_response_200_6:
+    inline_response_200_7:
       type: object
       properties:
         date:
@@ -547,7 +596,7 @@ components:
       example:
         date: 2000-01-23
         predicted_temp: 0.8008282
-    inline_response_200_7:
+    inline_response_200_8:
       type: object
       properties:
         date:
@@ -559,7 +608,7 @@ components:
       example:
         date: 2000-01-23
         predicted_humidity: 0.8008282
-    inline_response_200_8:
+    inline_response_200_9:
       type: object
       properties:
         date:
@@ -571,21 +620,21 @@ components:
       example:
         date: 2000-01-23
         predicted_light: 0.8008282
-    inline_response_200_9:
+    inline_response_200_10:
       type: object
       properties:
         estimated_drying_time_hours:
           type: integer
         input:
-          $ref: "#/components/schemas/inline_response_200_9_input"
+          $ref: "#/components/schemas/inline_response_200_10_input"
       example:
         input:
-          wind_kph: 5.962133916683182377482808078639209270477294921875
-          temp: 6.02745618307040320615897144307382404804229736328125
-          width: 5.63737665663332876420099637471139430999755859375
-          humidity: 1.46581298050294517310021547018550336360931396484375
+          wind_kph: 5.962133916683182
+          temp: 6.027456183070403
+          width: 5.637376656633329
+          humidity: 1.4658129805029452
         estimated_drying_time_hours: 0
-    inline_response_200_10:
+    inline_response_200_11:
       type: object
       properties:
         date:
@@ -609,13 +658,13 @@ components:
           - Bad
       example:
         date: 2000-01-23
-        wind_kph: 6.02745618307040320615897144307382404804229736328125
-        temp: 0.80082819046101150206595775671303272247314453125
-        humidity: 1.46581298050294517310021547018550336360931396484375
+        wind_kph: 6.027456183070403
+        temp: 0.8008281904610115
+        humidity: 1.4658129805029452
         drying_status: Good
         predicted_condition: predicted_condition
-        estimated_drying_time_hours: 5.962133916683182377482808078639209270477294921875
-    inline_response_200_9_input:
+        estimated_drying_time_hours: 5.962133916683182
+    inline_response_200_10_input:
       type: object
       properties:
         temp:
@@ -627,8 +676,8 @@ components:
         width:
           type: number
       example:
-        wind_kph: 5.962133916683182377482808078639209270477294921875
-        temp: 6.02745618307040320615897144307382404804229736328125
-        width: 5.63737665663332876420099637471139430999755859375
-        humidity: 1.46581298050294517310021547018550336360931396484375
+        wind_kph: 5.962133916683182
+        temp: 6.027456183070403
+        width: 5.637376656633329
+        humidity: 1.4658129805029452
 

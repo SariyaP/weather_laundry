@@ -1,10 +1,10 @@
 import connexion
 import six
 
-from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
-from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
+from swagger_server.models.inline_response20011 import InlineResponse20011  # noqa: E501
 from swagger_server.models.inline_response2007 import InlineResponse2007  # noqa: E501
 from swagger_server.models.inline_response2008 import InlineResponse2008  # noqa: E501
+from swagger_server.models.inline_response2009 import InlineResponse2009  # noqa: E501
 from swagger_server import util
 
 
@@ -14,7 +14,7 @@ def controller_forecast_humidity():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: List[InlineResponse2007]
+    :rtype: List[InlineResponse2008]
     """
     return 'do some magic!'
 
@@ -25,7 +25,7 @@ def controller_forecast_light():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: List[InlineResponse2008]
+    :rtype: List[InlineResponse2009]
     """
     return 'do some magic!'
 
@@ -36,7 +36,7 @@ def controller_forecast_temperature():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: List[InlineResponse2006]
+    :rtype: List[InlineResponse2007]
     """
     return 'do some magic!'
 
@@ -47,6 +47,6 @@ def controller_predict_w_condition_next14_days():  # noqa: E501
     Uses historical data and machine learning to predict daily weather conditions (e.g., sunny, cloudy, rain) for the next 14 days. # noqa: E501
 
 
-    :rtype: List[InlineResponse20010]
+    :rtype: List[InlineResponse20011]
     """
     return 'do some magic!'

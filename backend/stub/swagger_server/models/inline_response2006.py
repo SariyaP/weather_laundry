@@ -14,25 +14,35 @@ class InlineResponse2006(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, _date: date=None, predicted_temp: float=None):  # noqa: E501
+    def __init__(self, day: str=None, avg_temp: float=None, avg_wind: float=None, avg_humidity: float=None):  # noqa: E501
         """InlineResponse2006 - a model defined in Swagger
 
-        :param _date: The _date of this InlineResponse2006.  # noqa: E501
-        :type _date: date
-        :param predicted_temp: The predicted_temp of this InlineResponse2006.  # noqa: E501
-        :type predicted_temp: float
+        :param day: The day of this InlineResponse2006.  # noqa: E501
+        :type day: str
+        :param avg_temp: The avg_temp of this InlineResponse2006.  # noqa: E501
+        :type avg_temp: float
+        :param avg_wind: The avg_wind of this InlineResponse2006.  # noqa: E501
+        :type avg_wind: float
+        :param avg_humidity: The avg_humidity of this InlineResponse2006.  # noqa: E501
+        :type avg_humidity: float
         """
         self.swagger_types = {
-            '_date': date,
-            'predicted_temp': float
+            'day': str,
+            'avg_temp': float,
+            'avg_wind': float,
+            'avg_humidity': float
         }
 
         self.attribute_map = {
-            '_date': 'date',
-            'predicted_temp': 'predicted_temp'
+            'day': 'day',
+            'avg_temp': 'avg_temp',
+            'avg_wind': 'avg_wind',
+            'avg_humidity': 'avg_humidity'
         }
-        self.__date = _date
-        self._predicted_temp = predicted_temp
+        self._day = day
+        self._avg_temp = avg_temp
+        self._avg_wind = avg_wind
+        self._avg_humidity = avg_humidity
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2006':
@@ -46,43 +56,85 @@ class InlineResponse2006(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def _date(self) -> date:
-        """Gets the _date of this InlineResponse2006.
+    def day(self) -> str:
+        """Gets the day of this InlineResponse2006.
 
 
-        :return: The _date of this InlineResponse2006.
-        :rtype: date
+        :return: The day of this InlineResponse2006.
+        :rtype: str
         """
-        return self.__date
+        return self._day
 
-    @_date.setter
-    def _date(self, _date: date):
-        """Sets the _date of this InlineResponse2006.
+    @day.setter
+    def day(self, day: str):
+        """Sets the day of this InlineResponse2006.
 
 
-        :param _date: The _date of this InlineResponse2006.
-        :type _date: date
+        :param day: The day of this InlineResponse2006.
+        :type day: str
         """
 
-        self.__date = _date
+        self._day = day
 
     @property
-    def predicted_temp(self) -> float:
-        """Gets the predicted_temp of this InlineResponse2006.
+    def avg_temp(self) -> float:
+        """Gets the avg_temp of this InlineResponse2006.
 
 
-        :return: The predicted_temp of this InlineResponse2006.
+        :return: The avg_temp of this InlineResponse2006.
         :rtype: float
         """
-        return self._predicted_temp
+        return self._avg_temp
 
-    @predicted_temp.setter
-    def predicted_temp(self, predicted_temp: float):
-        """Sets the predicted_temp of this InlineResponse2006.
+    @avg_temp.setter
+    def avg_temp(self, avg_temp: float):
+        """Sets the avg_temp of this InlineResponse2006.
 
 
-        :param predicted_temp: The predicted_temp of this InlineResponse2006.
-        :type predicted_temp: float
+        :param avg_temp: The avg_temp of this InlineResponse2006.
+        :type avg_temp: float
         """
 
-        self._predicted_temp = predicted_temp
+        self._avg_temp = avg_temp
+
+    @property
+    def avg_wind(self) -> float:
+        """Gets the avg_wind of this InlineResponse2006.
+
+
+        :return: The avg_wind of this InlineResponse2006.
+        :rtype: float
+        """
+        return self._avg_wind
+
+    @avg_wind.setter
+    def avg_wind(self, avg_wind: float):
+        """Sets the avg_wind of this InlineResponse2006.
+
+
+        :param avg_wind: The avg_wind of this InlineResponse2006.
+        :type avg_wind: float
+        """
+
+        self._avg_wind = avg_wind
+
+    @property
+    def avg_humidity(self) -> float:
+        """Gets the avg_humidity of this InlineResponse2006.
+
+
+        :return: The avg_humidity of this InlineResponse2006.
+        :rtype: float
+        """
+        return self._avg_humidity
+
+    @avg_humidity.setter
+    def avg_humidity(self, avg_humidity: float):
+        """Sets the avg_humidity of this InlineResponse2006.
+
+
+        :param avg_humidity: The avg_humidity of this InlineResponse2006.
+        :type avg_humidity: float
+        """
+
+        self._avg_humidity = avg_humidity

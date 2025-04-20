@@ -90,7 +90,6 @@ def predict_w_condition_next_14_days():
     condition_preds = knn.predict(future_scaled)
     decoded_preds = le.inverse_transform(condition_preds)
 
-    # 11. Print results
     print("\nWeather Condition Predictions for the Next 14 Days:")
     for i in range(forecast_days):
         print(f"Day {i + 1} - {future_data['date'][i].strftime('%Y-%m-%d')}: "
@@ -102,6 +101,5 @@ def predict_w_condition_next_14_days():
     return decoded_preds
 
 
-# Run it
 if __name__ == "__main__":
     predict_w_condition_next_14_days()

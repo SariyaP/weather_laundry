@@ -5,10 +5,10 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
-from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
+from swagger_server.models.inline_response20011 import InlineResponse20011  # noqa: E501
 from swagger_server.models.inline_response2007 import InlineResponse2007  # noqa: E501
 from swagger_server.models.inline_response2008 import InlineResponse2008  # noqa: E501
+from swagger_server.models.inline_response2009 import InlineResponse2009  # noqa: E501
 from swagger_server.test import BaseTestCase
 
 

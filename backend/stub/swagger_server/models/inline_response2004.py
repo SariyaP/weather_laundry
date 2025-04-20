@@ -14,25 +14,35 @@ class InlineResponse2004(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, condition: str=None, count: int=None):  # noqa: E501
+    def __init__(self, hour: str=None, avg_temp: float=None, avg_wind_kph: float=None, avg_humidity: float=None):  # noqa: E501
         """InlineResponse2004 - a model defined in Swagger
 
-        :param condition: The condition of this InlineResponse2004.  # noqa: E501
-        :type condition: str
-        :param count: The count of this InlineResponse2004.  # noqa: E501
-        :type count: int
+        :param hour: The hour of this InlineResponse2004.  # noqa: E501
+        :type hour: str
+        :param avg_temp: The avg_temp of this InlineResponse2004.  # noqa: E501
+        :type avg_temp: float
+        :param avg_wind_kph: The avg_wind_kph of this InlineResponse2004.  # noqa: E501
+        :type avg_wind_kph: float
+        :param avg_humidity: The avg_humidity of this InlineResponse2004.  # noqa: E501
+        :type avg_humidity: float
         """
         self.swagger_types = {
-            'condition': str,
-            'count': int
+            'hour': str,
+            'avg_temp': float,
+            'avg_wind_kph': float,
+            'avg_humidity': float
         }
 
         self.attribute_map = {
-            'condition': 'condition',
-            'count': 'count'
+            'hour': 'hour',
+            'avg_temp': 'avg_temp',
+            'avg_wind_kph': 'avg_wind_kph',
+            'avg_humidity': 'avg_humidity'
         }
-        self._condition = condition
-        self._count = count
+        self._hour = hour
+        self._avg_temp = avg_temp
+        self._avg_wind_kph = avg_wind_kph
+        self._avg_humidity = avg_humidity
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2004':
@@ -46,43 +56,93 @@ class InlineResponse2004(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def condition(self) -> str:
-        """Gets the condition of this InlineResponse2004.
+    def hour(self) -> str:
+        """Gets the hour of this InlineResponse2004.
 
+        The hour of the day in HH:00:00 format  # noqa: E501
 
-        :return: The condition of this InlineResponse2004.
+        :return: The hour of this InlineResponse2004.
         :rtype: str
         """
-        return self._condition
+        return self._hour
 
-    @condition.setter
-    def condition(self, condition: str):
-        """Sets the condition of this InlineResponse2004.
+    @hour.setter
+    def hour(self, hour: str):
+        """Sets the hour of this InlineResponse2004.
 
+        The hour of the day in HH:00:00 format  # noqa: E501
 
-        :param condition: The condition of this InlineResponse2004.
-        :type condition: str
+        :param hour: The hour of this InlineResponse2004.
+        :type hour: str
         """
 
-        self._condition = condition
+        self._hour = hour
 
     @property
-    def count(self) -> int:
-        """Gets the count of this InlineResponse2004.
+    def avg_temp(self) -> float:
+        """Gets the avg_temp of this InlineResponse2004.
 
+        The average temperature for the hour  # noqa: E501
 
-        :return: The count of this InlineResponse2004.
-        :rtype: int
+        :return: The avg_temp of this InlineResponse2004.
+        :rtype: float
         """
-        return self._count
+        return self._avg_temp
 
-    @count.setter
-    def count(self, count: int):
-        """Sets the count of this InlineResponse2004.
+    @avg_temp.setter
+    def avg_temp(self, avg_temp: float):
+        """Sets the avg_temp of this InlineResponse2004.
 
+        The average temperature for the hour  # noqa: E501
 
-        :param count: The count of this InlineResponse2004.
-        :type count: int
+        :param avg_temp: The avg_temp of this InlineResponse2004.
+        :type avg_temp: float
         """
 
-        self._count = count
+        self._avg_temp = avg_temp
+
+    @property
+    def avg_wind_kph(self) -> float:
+        """Gets the avg_wind_kph of this InlineResponse2004.
+
+        The average wind speed in kilometers per hour for the hour  # noqa: E501
+
+        :return: The avg_wind_kph of this InlineResponse2004.
+        :rtype: float
+        """
+        return self._avg_wind_kph
+
+    @avg_wind_kph.setter
+    def avg_wind_kph(self, avg_wind_kph: float):
+        """Sets the avg_wind_kph of this InlineResponse2004.
+
+        The average wind speed in kilometers per hour for the hour  # noqa: E501
+
+        :param avg_wind_kph: The avg_wind_kph of this InlineResponse2004.
+        :type avg_wind_kph: float
+        """
+
+        self._avg_wind_kph = avg_wind_kph
+
+    @property
+    def avg_humidity(self) -> float:
+        """Gets the avg_humidity of this InlineResponse2004.
+
+        The average humidity percentage for the hour  # noqa: E501
+
+        :return: The avg_humidity of this InlineResponse2004.
+        :rtype: float
+        """
+        return self._avg_humidity
+
+    @avg_humidity.setter
+    def avg_humidity(self, avg_humidity: float):
+        """Sets the avg_humidity of this InlineResponse2004.
+
+        The average humidity percentage for the hour  # noqa: E501
+
+        :param avg_humidity: The avg_humidity of this InlineResponse2004.
+        :type avg_humidity: float
+        """
+
+        self._avg_humidity = avg_humidity
