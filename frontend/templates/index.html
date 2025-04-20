@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg transparent-background fixed-top px-3">
   <div class="container-fluid">
     <a class="navbar-brand text-white display-4" href="#">Weather & Laundry</a>
@@ -13,8 +12,6 @@
     </div>
   </div>
 </nav>
-
-<!-- Main Content -->
 <div class="row d-flex justify-content-center px-3 py-4">
   <div class="col-md-8 col-lg-6">
     <div class="card text-body transparent-background round border-0">
@@ -48,15 +45,11 @@
         </div>
       </div>
     </div>
-
-    <!-- Temp Trend Chart -->
     <div class="py-3">
       <div class="py-3 card transparent-background round border-0">
         <canvas id="tempTrendChart" height="80"></canvas>
       </div>
     </div>
-
-    <!-- Humidity & Wind Speed -->
     <div class="row">
       <div class="col">
         <div class="card transparent-background round border-0">
@@ -88,17 +81,11 @@
                data-humidity="{{ humidity }}"
                data-wind-speed="{{ wind_speed }}">
           </div>
-
-          <!-- User input -->
           <label for="thickness" class="text-white px-3 mt-2">Clothes Thickness (cm):</label>
           <input type="number" id="thickness" class="form-control mx-3 mb-3" value="2" min="1" max="10" step="0.1" style="max-width: 200px;">
-
-          <!-- Trigger button -->
           <div class="px-3">
             <button class="btn btn-light" id="estimate-btn">Estimate Drying Time</button>
           </div>
-
-          <!-- Result output -->
           <div id="drying-result" class="text-white px-3 pt-3 d-flex flex-column align-items-center">
             <div id="drying-time-text" class="mb-2"></div>
             <img id="drying-status-image" src="{% static 'images/good.png' %}" alt="Drying Status" width="120" style="display: none;">
@@ -108,44 +95,33 @@
       </div>
     </div>
 
-    <!-- Calendar -->
     <div class="py-3">
       <div class="card py-3 px-3 d-flex align-items-center transparent-background round border-0 weatherCalendar" id="weatherCalendar"></div>
     </div>
   </div>
 </div>
 
-<!-- Add JavaScript directly in HTML -->
 <script>
   document.getElementById('estimate-btn').addEventListener('click', function() {
-    // Get data from DOM
     const temp = document.getElementById('weather-data').getAttribute('data-temp');
     const humidity = document.getElementById('weather-data').getAttribute('data-humidity');
     const windSpeed = document.getElementById('weather-data').getAttribute('data-wind-speed');
     const thickness = document.getElementById('thickness').value;
-
-    // Construct URL for the API request
     const url = `http://127.0.0.1:8080/laundry-api/v1/estimate-drying-time?temp=${temp}&humid=${humidity}&wind_kph=${windSpeed}&width=${thickness}`;
-
-    // Make the API request using fetch
     fetch(url)
     console.log(fetch(url))
       .then(response => response.json())
       .then(data => {
-        // Check for the expected response data
         if (data.drying_time && data.drying_status) {
-          // Display drying time and status
           document.getElementById('drying-time-text').innerText = `Estimated drying time: ${data.drying_time} hours`;
           document.getElementById('drying-status-image').src = data.drying_status === 'good' ? '{% static "images/good.png" %}' : '{% static "images/bad.png" %}';
           document.getElementById('drying-status-image').style.display = 'block';
         } else {
-          // Handle errors or missing data
           document.getElementById('drying-time-text').innerText = 'Failed to estimate drying time. Please try again.';
           document.getElementById('drying-status-image').style.display = 'none';
         }
       })
       .catch(error => {
-        // Handle any errors with the fetch request
         console.error('Error estimating drying time:', error);
         document.getElementById('drying-time-text').innerText = 'Error occurred while estimating drying time.';
         document.getElementById('drying-status-image').style.display = 'none';
