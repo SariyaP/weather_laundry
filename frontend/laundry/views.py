@@ -11,7 +11,7 @@ def index(request):
             'current_temp': int(data['temp']),
             'humidity': data['humidity'],
             'wind_speed': round(data['wind_kph']),
-            'description': data['condition'],
+            'description': data['w_condition'],
             'icon': None
         }
 

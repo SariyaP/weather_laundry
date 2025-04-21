@@ -9,6 +9,7 @@ html, body {
 }
 .trans {
     color: rgba(255, 255, 255);
+    background-color: transparent;
 }
 .round{
     border-radius: 35px;
@@ -49,4 +50,10 @@ html, body {
     font-size: 1rem;
     padding: 0.5em 0;
     background-color: transparent;
+  }
+  body {
+    padding-top: 70px;
+  }
+  .form-control{
+    max-width: 100px;
   }

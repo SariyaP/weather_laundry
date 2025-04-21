@@ -44,12 +44,7 @@
         </div>
       </div>
     </div>
-    <div class="py-3">
-      <div class="py-3 card transparent-background round border-0">
-        <canvas id="tempTrendChart" height="80"></canvas>
-      </div>
-    </div>
-    <div class="row">
+    <div class="row mt-3">
       <div class="col">
         <div class="card transparent-background round border-0">
           <div class="card-body">
@@ -78,9 +73,7 @@
           </div>
           <label for="thickness" class="text-white px-3 mt-2">Clothes Thickness (cm):</label>
           <input type="number" id="thickness" class="form-control mx-3 mb-3" value="2" min="1" max="10" step="0.1" style="max-width: 200px;">
-          <div class="px-3">
             <button class="btn btn-light" id="estimate-btn">Estimate Drying Time</button>
-          </div>
           <div id="drying-result" class="text-white px-3 pt-3 d-flex flex-column align-items-center">
             <div id="drying-time-text" class="mb-2"></div>
             <img id="drying-status-image" src="{% static 'images/good.png' %}" alt="Drying Status" width="120" style="display: none;">
@@ -95,34 +88,5 @@
     </div>
   </div>
 </div>
-
-<script>
-  document.getElementById('estimate-btn').addEventListener('click', function() {
-    const temp = document.getElementById('weather-data').getAttribute('data-temp');
-    const humidity = document.getElementById('weather-data').getAttribute('data-humidity');
-    const windSpeed = document.getElementById('weather-data').getAttribute('data-wind-speed');
-    const thickness = document.getElementById('thickness').value;
-    const url = `http://127.0.0.1:8080/laundry-api/v1/estimate-drying-time?temp=${temp}&humid=${humidity}&wind_kph=${windSpeed}&width=${thickness}`;
-
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        if (data.estimated_drying_time_hours !== undefined) {
-          const dryingTime = parseFloat(data.estimated_drying_time_hours);
-          const displayTime = dryingTime < 1 ? "< 1 hour" : `${dryingTime} hour${dryingTime === 1 ? '' : 's'}`;
-          document.getElementById('drying-time-text').innerText = `Estimated drying time: ${displayTime}`;
-        } else {
-          document.getElementById('drying-time-text').innerText = 'Failed to estimate drying time. Please try again.';
-          document.getElementById('drying-status-image').style.display = 'none';
-        }
-      })
-      .catch(error => {
-        console.error('Error estimating drying time:', error);
-        document.getElementById('drying-time-text').innerText = 'Error occurred while estimating drying time.';
-        document.getElementById('drying-status-image').style.display = 'none';
-      });
-  });
-</script>
-
 
 {% endblock %}
