@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block content %}
-<nav class="navbar navbar-expand-lg transparent-background fixed-top px-3">
+    <nav class="navbar navbar-expand-lg transparent-background fixed-top px-3">
   <div class="container-fluid">
-    <a class="navbar-brand text-white display-4" href="#">Weather & Laundry</a>
+    <a class="navbar-brand text-white display-4">Weather & Laundry</a>
     <div class="ms-auto">
       <button class="btn btn-outline-0 text-white" onclick="window.location.href='/'">
         <i class="bi bi-house"></i>
@@ -12,11 +12,11 @@
     </div>
   </div>
 </nav>
-<div class="container mt-5 pt-5">
+<div class="container mt-3 pt-3 my-4">
   <h2 class="text-white text-center mb-4">Last 24 Hours Weather Trends</h2>
   
   <div class="d-flex justify-content-center mb-3">
-    <select id="metricSelector" class="form-select trans" style="max-width: 250px;">
+    <select id="metricSelector" class="form-select transparent-background text-white" style="max-width: 250px;">
       <option class="text-black" value="temp">Temperature (°C)</option>
       <option class="text-black" value="humidity">Humidity (%)</option>
       <option class="text-black" value="wind">Wind Speed (kph)</option>
@@ -29,4 +29,88 @@
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let chartInstance;
+
+  function fetchAndRender(metric) {
+    fetch('http://127.0.0.1:8080/laundry-api/v1/api/hourly-avg')
+      .then(response => response.json())
+      .then(data => {
+        const labels = data.map(entry => entry.hour).reverse();
+        let values;
+
+        if (metric === "temp") {
+          values = data.map(entry => entry.avg_temp).reverse();
+        } else if (metric === "humidity") {
+          values = data.map(entry => entry.avg_humidity).reverse();
+        } else if (metric === "wind") {
+          values = data.map(entry => entry.avg_wind).reverse();
+        }
+
+        const datasets = {
+          temp: { label: "Temperature (°C)", borderColor: "#ffcc00" },
+          humidity: { label: "Humidity (%)", borderColor: "#00ccff" },
+          wind: { label: "Wind Speed (kph)", borderColor: "#66ff66" }
+        };
+
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: datasets[metric].label,
+              data: values,
+              borderColor: datasets[metric].borderColor,
+              fill: false,
+              tension: 0.3,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                labels: { color: "white" }
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: "white" },
+                  title: {
+                display: true,
+                text: 'Hour of Day',
+                color: 'white'
+              }
+              },
+              y: {
+                ticks: { color: "white" },
+                  title: {
+                display: true,
+                text: datasets[metric].label,
+                color: 'white'
+              }
+              }
+            }
+          }
+        });
+      })
+      .catch(err => console.error("Failed to fetch data:", err));
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const selector = document.getElementById('metricSelector');
+    fetchAndRender(selector.value);
+
+    selector.addEventListener('change', () => {
+      fetchAndRender(selector.value);
+    });
+  });
+</script>
 {% endblock %}
