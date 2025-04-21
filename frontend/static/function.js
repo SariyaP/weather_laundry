@@ -62,18 +62,22 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: false,
-        dayHeaders: true,
-        height: 'auto',
-        events: events,
-        eventDidMount: function (info) {
-          info.el.style.color = 'white';
-          info.el.style.borderRadius = '6px';
-          info.el.style.fontWeight = 'bold';
-          info.el.style.textAlign = 'center';
-        }
-      });
+      initialView: 'dayGridMonth',
+      headerToolbar: false,
+      dayHeaders: true,
+      height: 'auto',
+      events: events,
+      eventDidMount: function (info) {
+        info.el.style.color = 'white';
+        info.el.style.borderRadius = '6px';
+        info.el.style.fontWeight = 'bold';
+        info.el.style.textAlign = 'center';
+      },
+      dateClick: function (info) {
+      //     modify to add click on calendar, show anything yay :D
+      }
+    });
+
 
       calendar.render();
     })

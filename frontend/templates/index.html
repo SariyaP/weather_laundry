@@ -21,15 +21,28 @@
           <div class="text-white" id="current-time"></div>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-3 px-3">
-          <div class="d-flex flex-column text-left">
+          <div class="d-flex flex-column text-center">
             <h6 class="display-4 mb-0 font-weight-bold text-white">{{ current_temp }}°C</h6>
-            <span class="small text-white">{{ description }}</span>
+            <span class="small text-white">{{ laundry }}</span>
           </div>
-          <img src="{% static 'images/good.png' %}" alt="..." width="200">
+            {% if "Good" in laundry %}
+                {% if time == 'night' %}
+                <img src="{% static 'images/night_good.png' %}" alt="Do Laundry" width="200">
+                  {% else %}
+                <img src="{% static 'images/good.png' %}" alt="Do Laundry" width="200">
+                    {% endif %}
+            {% elif "Moderate" in laundry %}
+                    {% if time == 'night' %}
+                <img src="{% static 'images/night_moderate.png' %}" alt="Do Laundry" width="200">
+                  {% else %}
+                <img src="{% static 'images/moderate.png' %}" alt="Maybe Laundry" width="200">
+                        {% endif %}
+            {% else %}
+                <img src="{% static 'images/bad.png' %}" alt="No Laundry" width="200">
+            {% endif %}
         </div>
       </div>
     </div>
-
     <div class="mt-3">
       <div class="card py-3 transparent-background round border-0">
         <div class="card-body">
@@ -37,19 +50,38 @@
             <div>
               <h2 class="text-white display-2" id="current-date"></h2>
             </div>
-            <div>
-              <img src="https://openweathermap.org/img/wn/{{ icon }}@2x.png" alt="Weather Icon">
+            <div class="d-flex">
+              {% if "Cloud" in description %}
+                  {% if time == 'night' %}
+                <i class="wi wi-night-cloudy"></i>
+                  {% else %}
+                <i class="wi wi-day-cloudy"></i>
+                   {% endif %}
+              {% elif "Thunder" in description %}
+                  {% if time == 'night' %}
+                <i class="wi wi-night-storm-showers"></i>
+                  {% else %}
+                  <i class="wi wi-day-storm-showers"></i>
+                  {% endif %}
+              {% elif "Rain" in description %}
+                  {% if time == 'night' %}
+                <i class="wi wi-night-rain"></i>
+                  {% else %}
+                  <i class="wi wi-day-rain"></i>
+                  {% endif %}
+              {% else %}
+                  {% if time == 'night' %}
+                <i class="wi wi-night-sunny"></i>
+                  {% else %}
+                  <i class="wi wi-day-sunny"></i>
+                   {% endif %}
+              {% endif %}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="py-3">
-      <div class="py-3 card transparent-background round border-0">
-        <canvas id="tempTrendChart" height="80"></canvas>
-      </div>
-    </div>
-    <div class="row">
+    <div class="row mt-3">
       <div class="col">
         <div class="card transparent-background round border-0">
           <div class="card-body">
@@ -76,15 +108,24 @@
                data-humidity="{{ humidity }}"
                data-wind-speed="{{ wind_speed }}">
           </div>
-          <label for="thickness" class="text-white px-3">Clothes Thickness (mm):</label>
-          <input type="number" id="thickness" class="form-control mx-3 mb-3" value="2" min="1" max="10" step="0.1" style="max-width: 200px;">
-          <div class="px-3">
-            <button class="btn btn-light" id="estimate-btn">Estimate Drying Time</button>
-          </div>
-          <div id="drying-result" class="text-white px-3 pt-3 d-flex flex-column align-items-center">
-            <div id="drying-time-text" class="mb-2"></div>
-            <img id="drying-status-image" src="{% static 'images/good.png' %}" alt="Drying Status" width="120" style="display: none;">
-          </div>
+           <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between px-3 mb-3 gap-3">
+      <div class="d-flex align-items-center flex-grow-1">
+        <label for="thickness" class="me-3 mb-0 text-white">Clothes Thickness (mm):</label>
+        <input type="number" id="thickness"
+               class="form-control text-white trans"
+               value="2" min="1" max="10" step="0.1"
+               style="max-width: 120px;">
+      </div>
+      <button class="btn btn-light trans text-white" id="estimate-btn">Estimate Drying Time</button>
+    </div>
+    <div id="drying-result" class="text-white text-center pt-2">
+      <div id="drying-time-text" class="mb-2 fs-5"></div>
+      <img id="drying-status-image"
+           src="{% static 'images/good.png' %}"
+           alt="Drying Status"
+           width="120"
+           style="display: none;">
+    </div>
 
         </div>
       </div>

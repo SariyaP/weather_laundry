@@ -59,3 +59,7 @@ html, body {
   .form-control{
     max-width: 100px;
   }
+  .wi{
+    font-size: 60px;
+    color: white
+  }
