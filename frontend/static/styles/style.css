@@ -73,3 +73,49 @@ html, body {
   border: 2px solid #ffffff !important;
   border-radius: 8px;
 }
+input {
+  background-color: transparent !important;
+  border: 2px solid #fff;
+  color: white;
+}
+
+input:focus {
+  background-color: transparent !important;
+  border-color: #ffffff;
+  box-shadow: 0 0 5px rgb(255, 255, 255);
+}
+button{
+  background-color: transparent !important;
+  border: 2px solid #fff;
+  color: white;
+}
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.card-body {
+  font-size: 1.2rem;
+}
+
+.list-unstyled li {
+  font-size: 1.1rem;
+}
+
+#eda-max,
+#eda-min,
+#eda-mean,
+#eda-std {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+button#estimate-btn {
+  font-size: 1.1rem;
+  padding: 10px 20px;
+}
+
+input#thickness {
+  font-size: 1.1rem;
+  padding: 10px;
+}

@@ -22,14 +22,33 @@
       <option class="text-black" value="wind">Wind Speed (kph)</option>
     </select>
   </div>
+<div class="row px-3">
+  <!-- Left Column: Chart -->
+  <div class="col-md-8 mb-4">
+    <div class="card transparent-background round border-0 h-100">
+      <div class="card-body">
+        <canvas id="weatherChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
 
-  <div class="card transparent-background round border-0">
-    <div class="card-body">
-      <canvas id="weatherChart" height="100"></canvas>
+  <div class="col-md-4 mb-4">
+    <div class="card transparent-background round border-0 h-100">
+      <div class="card-body text-white">
+        <h5 class="card-title mb-3">Statistics</h5>
+        <ul class="list-unstyled small">
+          <li><strong>Max:</strong> <span id="eda-max">{{ avg }}</span></li>
+          <li><strong>Min:</strong> <span id="eda-min">--</span></li>
+          <li><strong>Mean:</strong> <span id="eda-mean">--</span></li>
+          <li><strong>Std Dev:</strong> <span id="eda-std">--</span></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
 
+</div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   let chartInstance;
@@ -112,5 +131,25 @@
       fetchAndRender(selector.value);
     });
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+  fetch('http://127.0.0.1:8080/laundry-api/v1/api/hourly-avg')
+    .then(response => response.json())
+    .then(data => {
+      const values = data.map(entry => entry.avg_temp);
+
+      const max = Math.max(...values);
+      const min = Math.min(...values);
+      const mean = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1);
+      const std = Math.sqrt(values.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / values.length).toFixed(1);
+
+      document.getElementById('eda-max').textContent = max;
+      document.getElementById('eda-min').textContent = min;
+      document.getElementById('eda-mean').textContent = mean;
+      document.getElementById('eda-std').textContent = std;
+    })
+    .catch(error => console.error('Error fetching EDA data:', error));
+});
+
 </script>
 {% endblock %}
