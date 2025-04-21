@@ -3,7 +3,8 @@ function setBackgroundColor() {
     const hour = now.getHours();
     let backgroundColor;
     if (hour >= 6 && hour < 12) {
-        backgroundColor = "linear-gradient(334deg,rgba(55, 132, 184, 1) 50%, rgb(218, 200, 114) 100%)";
+        backgroundColor = "linear-gradient(104deg,rgba(14, 70, 110, 1) 0%, rgba(62, 96, 150, 1) 56%, rgba(56, 56, 110, 1) 100%)";
+        // backgroundColor = "linear-gradient(334deg,rgba(55, 132, 184, 1) 50%, rgb(218, 200, 114) 100%)";
     } else if (hour >= 12 && hour < 20) {
         backgroundColor = "linear-gradient(155deg,rgba(55, 132, 184, 1) 50%, rgba(149, 216, 237, 1) 100%)";
     } else {
@@ -39,15 +40,51 @@ document.addEventListener('DOMContentLoaded', function () {
   var calendarEl = document.getElementById('weatherCalendar');
 
   function getConditionStyle(condition) {
-    if (!condition) return { title: 'Unknown', backgroundColor: '#808080' };
+  if (!condition) return {
+    title: '❓',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    textColor: 'white'
+  };
 
-    condition = condition.toLowerCase();
-    if (condition.includes('sunny')) return { title: '☀️ Sunny', backgroundColor: '#FFD700' };
-    if (condition.includes('rain')) return { title: '🌧️ Rainy', backgroundColor: '#00BFFF' };
-    if (condition.includes('storm')) return { title: '🌩️ Storm', backgroundColor: '#8B0000' };
-    if (condition.includes('cloud')) return { title: '☁️ Cloudy', backgroundColor: '#B0C4DE' };
-    return { title: '⛅ Weather', backgroundColor: '#ADD8E6' };
-  }
+  condition = condition.toLowerCase();
+
+  if (condition.includes('sunny')) return {
+    title: '☀️',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    textColor: 'white'
+  };
+
+  if (condition.includes('rain')) return {
+    title: '🌧️',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    textColor: 'white'
+  };
+
+  if (condition.includes('storm')) return {
+    title: '🌩️',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    textColor: 'white'
+  };
+
+  if (condition.includes('cloud')) return {
+    title: '☁️',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    textColor: 'white'
+  };
+
+  return {
+    title: '⛅',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    textColor: 'white'
+  };
+}
+
 
   fetch('http://127.0.0.1:8080/laundry-api/v1/forecast-weather-conditions')
     .then(response => response.json())
@@ -55,9 +92,12 @@ document.addEventListener('DOMContentLoaded', function () {
       const events = data.map(entry => {
         const style = getConditionStyle(entry.predicted_condition);
         return {
-          title: `${style.title} ${entry.predicted_condition}`,
+          title: style.title,
           date: entry.date,
-          backgroundColor: style.backgroundColor
+          backgroundColor: style.backgroundColor,
+          borderColor: style.borderColor,
+          textColor: style.textColor,
+            className: 'weather-icon-event'
         };
       });
 
@@ -75,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       dateClick: function (info) {
       //     modify to add click on calendar, show anything yay :D
+          alert("You clicked on: " + info.dateStr);
       }
     });
 
