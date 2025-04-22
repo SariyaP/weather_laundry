@@ -1,0 +1,344 @@
+[
+    {
+        "id": "76221d8fc969e97d",
+        "type": "tab",
+        "label": "Flow 5",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "9b574065a573d4d2",
+        "type": "inject",
+        "z": "76221d8fc969e97d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "f637f59ff86b9968"
+            ]
+        ]
+    },
+    {
+        "id": "f637f59ff86b9968",
+        "type": "http request",
+        "z": "76221d8fc969e97d",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://api.weatherapi.com/v1/current.json?key=fae4bacd34d44a82800101901252303&q=Bangkok&aqi=no",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 180,
+        "wires": [
+            [
+                "e65eb317eb58d92e",
+                "b169ee5a2523652d"
+            ]
+        ]
+    },
+    {
+        "id": "e65eb317eb58d92e",
+        "type": "debug",
+        "z": "76221d8fc969e97d",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b169ee5a2523652d",
+        "type": "function",
+        "z": "76221d8fc969e97d",
+        "name": "function 3",
+        "func": "var weatherData = msg.payload;\n\nif (weatherData && weatherData.location && weatherData.current) {\n    msg.payload = {\n        temperature: parseFloat(weatherData.current.temp_c),\n        humidity: parseInt(weatherData.current.humidity),\n        windspeed: parseFloat(weatherData.current.wind_kph),\n        condition: weatherData.current.condition.text,\n    };\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 180,
+        "wires": [
+            [
+                "ce087b6d082ff504",
+                "a209f9ca4f0f4dae"
+            ]
+        ]
+    },
+    {
+        "id": "ce087b6d082ff504",
+        "type": "template",
+        "z": "76221d8fc969e97d",
+        "name": "",
+        "field": "topic",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "INSERT INTO api_data (temp, humidity, wind_kph, w_condition) VALUES ({{payload.temperature}}, {{payload.humidity}}, {{payload.windspeed}}, \"{{payload.condition}}\");",
+        "output": "str",
+        "x": 840,
+        "y": 200,
+        "wires": [
+            [
+                "5d72e73b9e5fc276"
+            ]
+        ]
+    },
+    {
+        "id": "5d72e73b9e5fc276",
+        "type": "mysql",
+        "z": "76221d8fc969e97d",
+        "mydb": "0f8cdc61d89ca1f8",
+        "name": "",
+        "x": 1120,
+        "y": 260,
+        "wires": [
+            [
+                "420ac2ce2e62e986"
+            ]
+        ]
+    },
+    {
+        "id": "420ac2ce2e62e986",
+        "type": "debug",
+        "z": "76221d8fc969e97d",
+        "name": "debug 19",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "a209f9ca4f0f4dae",
+        "type": "debug",
+        "z": "76221d8fc969e97d",
+        "name": "debug 20",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "a45d14cceb9b3066",
+        "type": "inject",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1800",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 600,
+        "wires": [
+            [
+                "3e662b7594a798af"
+            ]
+        ]
+    },
+    {
+        "id": "3e662b7594a798af",
+        "type": "http request",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://api.weatherapi.com/v1/current.json?key=fae4bacd34d44a82800101901252303&q=Bangkok&aqi=no",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 330,
+        "y": 520,
+        "wires": [
+            [
+                "27587cfd50883d31",
+                "1953297305bf5205"
+            ]
+        ]
+    },
+    {
+        "id": "27587cfd50883d31",
+        "type": "debug",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "name": "debug 27",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "1953297305bf5205",
+        "type": "function",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "name": "function 4",
+        "func": "var weatherData = msg.payload;\n\nif (weatherData && weatherData.location && weatherData.current) {\n    msg.payload = {\n        temperature: parseFloat(weatherData.current.temp_c),\n        humidity: parseInt(weatherData.current.humidity),\n        windspeed: parseFloat(weatherData.current.wind_kph),\n        condition: weatherData.current.condition.text,\n    };\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 520,
+        "wires": [
+            [
+                "db1643e7a3dcdfaa",
+                "a2fba47dd59b6709"
+            ]
+        ]
+    },
+    {
+        "id": "db1643e7a3dcdfaa",
+        "type": "template",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "name": "",
+        "field": "topic",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "INSERT INTO api_data_30 (temp, humidity, wind_kph, w_condition) VALUES ({{payload.temperature}}, {{payload.humidity}}, {{payload.windspeed}}, \"{{payload.condition}}\");",
+        "output": "str",
+        "x": 780,
+        "y": 540,
+        "wires": [
+            [
+                "a8b884c26bc6c2bc"
+            ]
+        ]
+    },
+    {
+        "id": "a8b884c26bc6c2bc",
+        "type": "mysql",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "mydb": "0f8cdc61d89ca1f8",
+        "name": "",
+        "x": 1060,
+        "y": 600,
+        "wires": [
+            [
+                "8d83086cb8ba7dfa"
+            ]
+        ]
+    },
+    {
+        "id": "8d83086cb8ba7dfa",
+        "type": "debug",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "name": "debug 28",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "a2fba47dd59b6709",
+        "type": "debug",
+        "z": "76221d8fc969e97d",
+        "d": true,
+        "name": "debug 29",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "0f8cdc61d89ca1f8",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "iot.cpe.ku.ac.th",
+        "port": "3306",
+        "db": "b6610545448",
+        "tz": "+07:00",
+        "charset": "UTF8"
+    }
+]
