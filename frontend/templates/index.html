@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
-    <nav class="navbar navbar-expand-lg transparent-background fixed-top  px-3">
+<nav class="navbar navbar-expand-lg transparent-background fixed-top px-3">
   <div class="container-fluid">
     <a class="navbar-brand text-white display-4" href="#">Weather & Laundry</a>
-
     <div class="ms-auto">
-      <button class="btn btn-outline-0 text-white">
+      <button class="btn btn-outline-0 text-white" onclick="window.location.href='/visualization'">
         <i class="bi bi-graph-up"></i>
       </button>
     </div>
@@ -14,80 +14,115 @@
 </nav>
 <div class="row d-flex justify-content-center px-3 py-4">
   <div class="col-md-8 col-lg-6">
-    <div class="card text-body transparent-background round border-0" >
+    <div class="card text-body transparent-background round border-0">
       <div class="card-body p-4">
         <div class="d-flex">
           <h6 class="flex-grow-1 text-white">Bangkok <i class="bi bi-geo-alt-fill"></i></h6>
-               <div class="text-white" id="current-time"></div>
-            {#If wanna change location change the Bangkok value#}
+          <div class="text-white" id="current-time"></div>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-3 px-3">
-          <!-- Left side (temp and condition) -->
           <div class="d-flex flex-column text-left">
             <h6 class="display-4 mb-0 font-weight-bold text-white">{{ current_temp }}°C</h6>
-            <span class="small text-white">Stormy</span>
+            <span class="small text-white">{{ description }}</span>
           </div>
-
-          <!-- Right side (image) -->
           <img src="{% static 'images/good.png' %}" alt="..." width="200">
         </div>
       </div>
     </div>
-      <div class="mt-3">
-          <div class="card py-3 transparent-background round border-0">
-              <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center px-3">
+
+    <div class="mt-3">
+      <div class="card py-3 transparent-background round border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center px-3">
             <div>
-          <h2 class="text-white display-2" id="current-date"></h2>
-        </div>
-        <div>
-          <img src="https://openweathermap.org/img/wn/{{ icon }}@2x.png" alt="Weather Icon">
-        </div>
-      </div>
-  </div>
-</div>
-</div>
-      <div class="py-3">
-          <div class="py-3 card transparent-background round border-0">
-      <canvas id="tempTrendChart" height="80"></canvas>
+              <h2 class="text-white display-2" id="current-date"></h2>
+            </div>
+            <div>
+              <img src="https://openweathermap.org/img/wn/{{ icon }}@2x.png" alt="Weather Icon">
+            </div>
           </div>
-      </div>
-      <div class="row">
-          <div class="col">
-      <div class="card transparent-background round border-0">
-              <div class="card-body">
-                  <h6 class="flex-grow-1 text-white"> <i class="bi bi-water px-2"></i>Humidity</h6>
-                  <h2 class="px-3 py-2 text-white display-6">{{ humidity }} %</h2>
-        <div class="d-flex justify-content-between align-items-center px-3">
-            <div>
         </div>
       </div>
-  </div>
-</div>
+    </div>
+    <div class="py-3">
+      <div class="py-3 card transparent-background round border-0">
+        <canvas id="tempTrendChart" height="80"></canvas>
       </div>
-          <div class="col">
-          <div class="card transparent-background round border-0">
-              <div class="card-body">
-                  <h6 class="flex-grow-1 text-white"><i class="bi bi-wind px-2"></i>Wind Speed</h6>
-                  <h2 class="px-3 py-2 text-white display-6">{{ wind_speed }} m/s</h2>
-        <div class="d-flex justify-content-between align-items-center px-3">
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card transparent-background round border-0">
+          <div class="card-body">
+            <h6 class="flex-grow-1 text-white"><i class="bi bi-water px-2"></i>Humidity</h6>
+            <h2 class="px-3 py-2 text-white display-6">{{ humidity }} %</h2>
+          </div>
+        </div>
       </div>
-</div>
-</div>
-</div>
+      <div class="col">
+        <div class="card transparent-background round border-0">
+          <div class="card-body">
+            <h6 class="flex-grow-1 text-white"><i class="bi bi-wind px-2"></i>Wind Speed</h6>
+            <h2 class="px-3 py-2 text-white display-6">{{ wind_speed }} m/s</h2>
+          </div>
+        </div>
       </div>
-      <div class="mt-3">
-          <div class="card py-3 transparent-background round border-0">
-              <h6 class="flex-grow-1 text-white px-4 py-2">Dry Estimator </h6>
-              <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center px-3">
+    </div>
+    <div class="mt-3">
+      <div class="card py-3 transparent-background round border-0">
+        <h6 class="flex-grow-1 text-white px-4 py-2">Dry Estimator</h6>
+        <div class="card-body">
+          <div id="weather-data"
+               data-temp="{{ current_temp }}"
+               data-humidity="{{ humidity }}"
+               data-wind-speed="{{ wind_speed }}">
+          </div>
+          <label for="thickness" class="text-white px-3 mt-2">Clothes Thickness (cm):</label>
+          <input type="number" id="thickness" class="form-control mx-3 mb-3" value="2" min="1" max="10" step="0.1" style="max-width: 200px;">
+          <div class="px-3">
+            <button class="btn btn-light" id="estimate-btn">Estimate Drying Time</button>
+          </div>
+          <div id="drying-result" class="text-white px-3 pt-3 d-flex flex-column align-items-center">
+            <div id="drying-time-text" class="mb-2"></div>
+            <img id="drying-status-image" src="{% static 'images/good.png' %}" alt="Drying Status" width="120" style="display: none;">
+          </div>
+
+        </div>
       </div>
-  </div>
-</div>
-</div>
-      <div class="py-3">
+    </div>
+
+    <div class="py-3">
       <div class="card py-3 px-3 d-flex align-items-center transparent-background round border-0 weatherCalendar" id="weatherCalendar"></div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
+
+<script>
+  document.getElementById('estimate-btn').addEventListener('click', function() {
+    const temp = document.getElementById('weather-data').getAttribute('data-temp');
+    const humidity = document.getElementById('weather-data').getAttribute('data-humidity');
+    const windSpeed = document.getElementById('weather-data').getAttribute('data-wind-speed');
+    const thickness = document.getElementById('thickness').value;
+    const url = `http://127.0.0.1:8080/laundry-api/v1/estimate-drying-time?temp=${temp}&humid=${humidity}&wind_kph=${windSpeed}&width=${thickness}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.estimated_drying_time_hours !== undefined) {
+          const dryingTime = parseFloat(data.estimated_drying_time_hours);
+          const displayTime = dryingTime < 1 ? "< 1 hour" : `${dryingTime} hour${dryingTime === 1 ? '' : 's'}`;
+          document.getElementById('drying-time-text').innerText = `Estimated drying time: ${displayTime}`;
+        } else {
+          document.getElementById('drying-time-text').innerText = 'Failed to estimate drying time. Please try again.';
+          document.getElementById('drying-status-image').style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error estimating drying time:', error);
+        document.getElementById('drying-time-text').innerText = 'Error occurred while estimating drying time.';
+        document.getElementById('drying-status-image').style.display = 'none';
+      });
+  });
+</script>
+
+
 {% endblock %}

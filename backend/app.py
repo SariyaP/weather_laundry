@@ -2,6 +2,7 @@ import sys
 import os
 from flask import Flask
 import connexion
+from flask_cors import CORS
 
 # Check if the config file exists
 if not os.path.exists("config.py"):
@@ -33,8 +34,13 @@ except ModuleNotFoundError:
 from swagger_server import encoder
 
 def main():
-    # Create the Flask app
+    # Create the Flask app using connexion
     app = connexion.App(__name__, specification_dir='./openapi/')
+    
+    # Apply CORS to the Flask app instance (app.app is the actual Flask instance)
+    CORS(app.app)
+    
+    # Use a custom JSON encoder (optional)
     app.app.json_encoder = encoder.JSONEncoder
 
     # Add the OpenAPI specification and bind it to your Flask server

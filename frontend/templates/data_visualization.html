@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+  <h2 class="text-white text-center mb-4">Last 24 Hours Weather Trends</h2>
+  
+  <div class="d-flex justify-content-center mb-3">
+    <select id="metricSelector" class="form-select" style="max-width: 250px;">
+      <option value="temp">Temperature (°C)</option>
+      <option value="humidity">Humidity (%)</option>
+      <option value="wind">Wind Speed (kph)</option>
+    </select>
+  </div>
+
+  <div class="card transparent-background round border-0">
+    <div class="card-body">
+      <canvas id="weatherChart" height="100"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let chartInstance;
+
+  function fetchAndRender(metric) {
+    fetch('http://127.0.0.1:8080/laundry-api/v1/api/hourly-avg')
+      .then(response => response.json())
+      .then(data => {
+        const labels = data.map(entry => entry.hour).reverse();
+        let values;
+
+        if (metric === "temp") {
+          values = data.map(entry => entry.avg_temp).reverse();
+        } else if (metric === "humidity") {
+          values = data.map(entry => entry.avg_humidity).reverse();
+        } else if (metric === "wind") {
+          values = data.map(entry => entry.avg_wind).reverse();
+        }
+
+        const datasets = {
+          temp: { label: "Temperature (°C)", borderColor: "#ffcc00" },
+          humidity: { label: "Humidity (%)", borderColor: "#00ccff" },
+          wind: { label: "Wind Speed (kph)", borderColor: "#66ff66" }
+        };
+
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: datasets[metric].label,
+              data: values,
+              borderColor: datasets[metric].borderColor,
+              fill: false,
+              tension: 0.3,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                labels: { color: "white" }
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: "white" }
+              },
+              y: {
+                ticks: { color: "white" }
+              }
+            }
+          }
+        });
+      })
+      .catch(err => console.error("Failed to fetch data:", err));
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const selector = document.getElementById('metricSelector');
+    fetchAndRender(selector.value);
+
+    selector.addEventListener('change', () => {
+      fetchAndRender(selector.value);
+    });
+  });
+</script>
+{% endblock %}

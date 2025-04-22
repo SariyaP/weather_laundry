@@ -171,9 +171,42 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiData'
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 105
+                  time:
+                    type: string
+                    format: date-time
+                    example: "2025-04-20 10:30:00"
+                  temp:
+                    type: number
+                    format: float
+                    example: 31.5
+                  wind_kph:
+                    type: number
+                    format: float
+                    example: 12.3
+                  humidity:
+                    type: number
+                    format: float
+                    example: 56.0
+                  w_condition:
+                    type: string
+                    example: "Partly cloudy"
+                  estimated_drying_time_hours:
+                    type: number
+                    format: float
+                    example: 1.75
+                  drying_status:
+                    type: string
+                    enum: [Good, Moderate, Bad]
+                    example: "Good"
         '404':
-          description: Data not found
+          description: No data found
+        '400':
+          description: Error calculating drying condition
 
   /api/{data_id}:
     get:

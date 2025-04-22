@@ -9,6 +9,7 @@ from swagger_server.models.inline_response2003 import InlineResponse2003  # noqa
 from swagger_server.models.inline_response2004 import InlineResponse2004  # noqa: E501
 from swagger_server.models.inline_response2005 import InlineResponse2005  # noqa: E501
 from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
+from swagger_server.models.inline_response2007 import InlineResponse2007  # noqa: E501
 from swagger_server.models.kidbright_data import KidbrightData  # noqa: E501
 from swagger_server import util
 
@@ -19,7 +20,7 @@ def controller_get_api_condition_count():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: List[InlineResponse2005]
+    :rtype: List[InlineResponse2006]
     """
     return 'do some magic!'
 
@@ -30,7 +31,7 @@ def controller_get_api_data_avg():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: InlineResponse2003
+    :rtype: InlineResponse2004
     """
     return 'do some magic!'
 
@@ -71,7 +72,7 @@ def controller_get_api_data_latest():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: ApiData
+    :rtype: InlineResponse2003
     """
     return 'do some magic!'
 
@@ -84,7 +85,7 @@ def controller_get_api_data_recent_days(days=None):  # noqa: E501
     :param days: Number of days (default is 7)
     :type days: int
 
-    :rtype: List[InlineResponse2006]
+    :rtype: List[InlineResponse2007]
     """
     return 'do some magic!'
 
@@ -95,7 +96,7 @@ def controller_get_api_hourly_avg():  # noqa: E501
     Returns the hourly averages for temperature, wind speed, and humidity for the past 24 hours. # noqa: E501
 
 
-    :rtype: List[InlineResponse2004]
+    :rtype: List[InlineResponse2005]
     """
     return 'do some magic!'
 

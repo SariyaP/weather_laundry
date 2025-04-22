@@ -13,6 +13,7 @@ from swagger_server.models.inline_response2003 import InlineResponse2003  # noqa
 from swagger_server.models.inline_response2004 import InlineResponse2004  # noqa: E501
 from swagger_server.models.inline_response2005 import InlineResponse2005  # noqa: E501
 from swagger_server.models.inline_response2006 import InlineResponse2006  # noqa: E501
+from swagger_server.models.inline_response2007 import InlineResponse2007  # noqa: E501
 from swagger_server.models.kidbright_data import KidbrightData  # noqa: E501
 from swagger_server.test import BaseTestCase
 

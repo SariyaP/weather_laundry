@@ -14,34 +14,29 @@ class InlineResponse2004(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, hour: str=None, avg_temp: float=None, avg_wind_kph: float=None, avg_humidity: float=None):  # noqa: E501
+    def __init__(self, avg_temp: float=None, avg_wind: float=None, avg_humidity: float=None):  # noqa: E501
         """InlineResponse2004 - a model defined in Swagger
 
-        :param hour: The hour of this InlineResponse2004.  # noqa: E501
-        :type hour: str
         :param avg_temp: The avg_temp of this InlineResponse2004.  # noqa: E501
         :type avg_temp: float
-        :param avg_wind_kph: The avg_wind_kph of this InlineResponse2004.  # noqa: E501
-        :type avg_wind_kph: float
+        :param avg_wind: The avg_wind of this InlineResponse2004.  # noqa: E501
+        :type avg_wind: float
         :param avg_humidity: The avg_humidity of this InlineResponse2004.  # noqa: E501
         :type avg_humidity: float
         """
         self.swagger_types = {
-            'hour': str,
             'avg_temp': float,
-            'avg_wind_kph': float,
+            'avg_wind': float,
             'avg_humidity': float
         }
 
         self.attribute_map = {
-            'hour': 'hour',
             'avg_temp': 'avg_temp',
-            'avg_wind_kph': 'avg_wind_kph',
+            'avg_wind': 'avg_wind',
             'avg_humidity': 'avg_humidity'
         }
-        self._hour = hour
         self._avg_temp = avg_temp
-        self._avg_wind_kph = avg_wind_kph
+        self._avg_wind = avg_wind
         self._avg_humidity = avg_humidity
 
     @classmethod
@@ -56,33 +51,9 @@ class InlineResponse2004(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def hour(self) -> str:
-        """Gets the hour of this InlineResponse2004.
-
-        The hour of the day in HH:00:00 format  # noqa: E501
-
-        :return: The hour of this InlineResponse2004.
-        :rtype: str
-        """
-        return self._hour
-
-    @hour.setter
-    def hour(self, hour: str):
-        """Sets the hour of this InlineResponse2004.
-
-        The hour of the day in HH:00:00 format  # noqa: E501
-
-        :param hour: The hour of this InlineResponse2004.
-        :type hour: str
-        """
-
-        self._hour = hour
-
-    @property
     def avg_temp(self) -> float:
         """Gets the avg_temp of this InlineResponse2004.
 
-        The average temperature for the hour  # noqa: E501
 
         :return: The avg_temp of this InlineResponse2004.
         :rtype: float
@@ -93,7 +64,6 @@ class InlineResponse2004(Model):
     def avg_temp(self, avg_temp: float):
         """Sets the avg_temp of this InlineResponse2004.
 
-        The average temperature for the hour  # noqa: E501
 
         :param avg_temp: The avg_temp of this InlineResponse2004.
         :type avg_temp: float
@@ -102,33 +72,30 @@ class InlineResponse2004(Model):
         self._avg_temp = avg_temp
 
     @property
-    def avg_wind_kph(self) -> float:
-        """Gets the avg_wind_kph of this InlineResponse2004.
+    def avg_wind(self) -> float:
+        """Gets the avg_wind of this InlineResponse2004.
 
-        The average wind speed in kilometers per hour for the hour  # noqa: E501
 
-        :return: The avg_wind_kph of this InlineResponse2004.
+        :return: The avg_wind of this InlineResponse2004.
         :rtype: float
         """
-        return self._avg_wind_kph
+        return self._avg_wind
 
-    @avg_wind_kph.setter
-    def avg_wind_kph(self, avg_wind_kph: float):
-        """Sets the avg_wind_kph of this InlineResponse2004.
+    @avg_wind.setter
+    def avg_wind(self, avg_wind: float):
+        """Sets the avg_wind of this InlineResponse2004.
 
-        The average wind speed in kilometers per hour for the hour  # noqa: E501
 
-        :param avg_wind_kph: The avg_wind_kph of this InlineResponse2004.
-        :type avg_wind_kph: float
+        :param avg_wind: The avg_wind of this InlineResponse2004.
+        :type avg_wind: float
         """
 
-        self._avg_wind_kph = avg_wind_kph
+        self._avg_wind = avg_wind
 
     @property
     def avg_humidity(self) -> float:
         """Gets the avg_humidity of this InlineResponse2004.
 
-        The average humidity percentage for the hour  # noqa: E501
 
         :return: The avg_humidity of this InlineResponse2004.
         :rtype: float
@@ -139,7 +106,6 @@ class InlineResponse2004(Model):
     def avg_humidity(self, avg_humidity: float):
         """Sets the avg_humidity of this InlineResponse2004.
 
-        The average humidity percentage for the hour  # noqa: E501
 
         :param avg_humidity: The avg_humidity of this InlineResponse2004.
         :type avg_humidity: float
