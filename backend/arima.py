@@ -1,7 +1,6 @@
 import pandas as pd
 import pymysql
 from dbutils.pooled_db import PooledDB
-from sqlalchemy import create_engine
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
 from config import *
@@ -13,7 +12,6 @@ from pmdarima import auto_arima
 matplotlib.use('TkAgg')
 
 # Setup pooled DB connection
-password = quote_plus(DB_PASSWD)
 pool = PooledDB(
     creator=pymysql,
     host=DB_HOST,
@@ -26,45 +24,46 @@ pool = PooledDB(
     maxconnections=5
 )
 
-def predict_humidity():
-    # Connect using pool
+def predict_and_combine_humidity():
     conn = pool.connection()
-    
+
     try:
+        # Get all historical data
         query = "SELECT time, humidity FROM api_data ORDER BY time ASC"
         df = pd.read_sql(query, conn)
         df['time'] = pd.to_datetime(df['time'])
         df.set_index('time', inplace=True)
 
-        # Resample to hourly data
-        df = df.resample('H').mean().interpolate()
+        # Resample hourly (interpolates any missing hours)
+        df_hourly = df.resample('H').mean().interpolate()
 
-        # Auto ARIMA to find best (p,d,q)
-        stepwise_model = auto_arima(df['humidity'], seasonal=False, trace=True, suppress_warnings=True)
+        # Train on full history
+        stepwise_model = auto_arima(df_hourly['humidity'], seasonal=False, trace=False, suppress_warnings=True)
         best_order = stepwise_model.order
 
-        # Fit ARIMA
-        model = ARIMA(df['humidity'], order=best_order)
+        model = ARIMA(df_hourly['humidity'], order=best_order)
         model_fit = model.fit()
 
         # Forecast next 12 hours
         forecast_steps = 12
         forecast_result = model_fit.get_forecast(steps=forecast_steps)
         forecast = forecast_result.predicted_mean
+        future_times = pd.date_range(start=df_hourly.index[-1] + pd.Timedelta(hours=1), periods=forecast_steps, freq='H')
 
-        # Generate future hourly timestamps
-        future_times = pd.date_range(start=df.index[-1] + pd.Timedelta(hours=1), periods=forecast_steps, freq='H')
+        df_future = pd.DataFrame({'humidity': forecast.values}, index=future_times)
 
-        # Print forecast
-        print("Humidity Forecast for the Next 12 Hours:")
-        for i, (timestamp, humidity) in enumerate(zip(future_times, forecast), 1):
-            print(f"Hour {i}: {timestamp.strftime('%Y-%m-%d %H:%M')} - Forecasted Humidity: {humidity:.2f}%")
+        # Get last 12 hours of actual data
+        df_past_12 = df_hourly.last('12H')
+
+        # Combine for visualization
+        combined_df = pd.concat([df_past_12, df_future])
+        combined_df['source'] = ['actual'] * len(df_past_12) + ['forecast'] * len(df_future)
 
         # Plot
         plt.figure(figsize=(12, 6))
-        plt.plot(df.index, df['humidity'], label='Historical Humidity')
-        plt.plot(future_times, forecast, label='Forecasted Humidity', color='red')
-        plt.title('Humidity Forecast for the Next 12 Hours')
+        plt.plot(df_past_12.index, df_past_12['humidity'], label='Past 12 Hours (Actual)', marker='o')
+        plt.plot(df_future.index, df_future['humidity'], label='Next 12 Hours (Forecast)', color='red', linestyle='--', marker='x')
+        plt.title('Humidity: Past 12 Hours + Next 12 Hours Forecast')
         plt.xlabel('Datetime')
         plt.ylabel('Humidity (%)')
         plt.legend()
@@ -72,10 +71,11 @@ def predict_humidity():
         plt.tight_layout()
         plt.show()
 
-        return forecast
+        return combined_df
 
     finally:
         conn.close()
 
-# Run the forecast
-forecasted_values = predict_humidity()
+# Run it
+combined_humidity_df = predict_and_combine_humidity()
+print(combined_humidity_df)

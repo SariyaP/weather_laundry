@@ -465,7 +465,7 @@ def classify_drying_status(drying_time, weather_condition):
     
     is_cloudy_or_mist = any(word in weather_condition for word in cloudy_keywords)
 
-    if drying_time <= 1:
+    if drying_time <= 2:
         if is_cloudy_or_mist:
             if weather_condition == "partly cloudy":
                 return "Good"
@@ -556,3 +556,93 @@ def predict_w_condition_next_14_days():
         })
 
     return jsonify(results)
+
+def forecast_column_exclusive(series, steps=12):
+    model = ARIMA(series, order=(5, 1, 0))
+    model_fit = model.fit()
+    forecast = model_fit.forecast(steps=steps)
+    return forecast
+
+
+def get_api_hourly_avg_and_forecast():
+    conn = pool.connection()
+    try:
+        df = pd.read_sql("SELECT time, temp, wind_kph, humidity FROM api_data ORDER BY time ASC", conn)
+        df['time'] = pd.to_datetime(df['time'])
+        df.set_index('time', inplace=True)
+
+        df_hourly = df.resample('H').mean().interpolate()
+
+        df_past_12 = df_hourly.last('12H')
+
+        future_index = pd.date_range(start=df_hourly.index[-1] + pd.Timedelta(hours=1), periods=12, freq='H')
+
+        forecast_temp = forecast_column_exclusive(df_hourly['temp'], steps=12)
+        forecast_wind = forecast_column_exclusive(df_hourly['wind_kph'], steps=12)
+        forecast_humidity = forecast_column_exclusive(df_hourly['humidity'], steps=12)
+
+        df_forecast_12 = pd.DataFrame({
+            'temp': forecast_temp,
+            'wind_kph': forecast_wind,
+            'humidity': forecast_humidity
+        }, index=future_index)
+
+        # Add source column to both
+        df_past_12['source'] = 'actual'
+        df_forecast_12['source'] = 'forecast'
+
+        df_past_12 = df_past_12.round(2)
+        df_forecast_12 = df_forecast_12.round(2)
+
+        # Combine
+        combined_df = pd.concat([df_past_12, df_forecast_12])
+
+        # Reset index to format datetime in result
+        combined_df = combined_df.reset_index().rename(columns={'index': 'datetime'})
+        combined_df['datetime'] = combined_df['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+        result = combined_df.to_dict(orient='records')
+        return result
+
+    finally:
+        conn.close()
+
+
+def get_kidbright_hourly_avg_and_forecast():
+    conn = pool.connection()
+    try:
+        df = pd.read_sql("SELECT time, temp, humidity, light FROM kidbright_project ORDER BY time ASC", conn)
+        df['time'] = pd.to_datetime(df['time'])
+        df.set_index('time', inplace=True)
+        df_hourly = df.resample('H').mean().interpolate()
+
+        df_past_12 = df_hourly.last('12H')
+
+        future_index = pd.date_range(start=df_hourly.index[-1] + pd.Timedelta(hours=1), periods=12, freq='H')
+
+        forecast_temp = forecast_column_exclusive(df_hourly['temp'], steps=12)
+        forecast_humidity = forecast_column_exclusive(df_hourly['humidity'], steps=12)
+        forecast_light = forecast_column_exclusive(df_hourly['light'], steps=12)
+
+        df_forecast_12 = pd.DataFrame({
+            'temp': forecast_temp,
+            'humidity': forecast_humidity,
+            'light': forecast_light
+        }, index=future_index)
+
+        df_past_12['source'] = 'actual'
+        df_forecast_12['source'] = 'forecast'
+
+        df_past_12 = df_past_12.round(2)
+        df_forecast_12 = df_forecast_12.round(2)
+
+        combined_df = pd.concat([df_past_12, df_forecast_12])
+
+        combined_df = combined_df.reset_index().rename(columns={'index': 'datetime'})
+        combined_df['datetime'] = combined_df['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+        result = combined_df.to_dict(orient='records')
+        return result
+
+    finally:
+        conn.close()

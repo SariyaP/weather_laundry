@@ -14,25 +14,40 @@ class InlineResponse2009(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, _date: date=None, predicted_humidity: float=None):  # noqa: E501
+    def __init__(self, _datetime: str=None, temp: float=None, wind_kph: float=None, humidity: float=None, source: str=None):  # noqa: E501
         """InlineResponse2009 - a model defined in Swagger
 
-        :param _date: The _date of this InlineResponse2009.  # noqa: E501
-        :type _date: date
-        :param predicted_humidity: The predicted_humidity of this InlineResponse2009.  # noqa: E501
-        :type predicted_humidity: float
+        :param _datetime: The _datetime of this InlineResponse2009.  # noqa: E501
+        :type _datetime: str
+        :param temp: The temp of this InlineResponse2009.  # noqa: E501
+        :type temp: float
+        :param wind_kph: The wind_kph of this InlineResponse2009.  # noqa: E501
+        :type wind_kph: float
+        :param humidity: The humidity of this InlineResponse2009.  # noqa: E501
+        :type humidity: float
+        :param source: The source of this InlineResponse2009.  # noqa: E501
+        :type source: str
         """
         self.swagger_types = {
-            '_date': date,
-            'predicted_humidity': float
+            '_datetime': str,
+            'temp': float,
+            'wind_kph': float,
+            'humidity': float,
+            'source': str
         }
 
         self.attribute_map = {
-            '_date': 'date',
-            'predicted_humidity': 'predicted_humidity'
+            '_datetime': 'datetime',
+            'temp': 'temp',
+            'wind_kph': 'wind_kph',
+            'humidity': 'humidity',
+            'source': 'source'
         }
-        self.__date = _date
-        self._predicted_humidity = predicted_humidity
+        self.__datetime = _datetime
+        self._temp = temp
+        self._wind_kph = wind_kph
+        self._humidity = humidity
+        self._source = source
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse2009':
@@ -46,43 +61,112 @@ class InlineResponse2009(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def _date(self) -> date:
-        """Gets the _date of this InlineResponse2009.
+    def _datetime(self) -> str:
+        """Gets the _datetime of this InlineResponse2009.
 
 
-        :return: The _date of this InlineResponse2009.
-        :rtype: date
+        :return: The _datetime of this InlineResponse2009.
+        :rtype: str
         """
-        return self.__date
+        return self.__datetime
 
-    @_date.setter
-    def _date(self, _date: date):
-        """Sets the _date of this InlineResponse2009.
+    @_datetime.setter
+    def _datetime(self, _datetime: str):
+        """Sets the _datetime of this InlineResponse2009.
 
 
-        :param _date: The _date of this InlineResponse2009.
-        :type _date: date
+        :param _datetime: The _datetime of this InlineResponse2009.
+        :type _datetime: str
         """
 
-        self.__date = _date
+        self.__datetime = _datetime
 
     @property
-    def predicted_humidity(self) -> float:
-        """Gets the predicted_humidity of this InlineResponse2009.
+    def temp(self) -> float:
+        """Gets the temp of this InlineResponse2009.
 
 
-        :return: The predicted_humidity of this InlineResponse2009.
+        :return: The temp of this InlineResponse2009.
         :rtype: float
         """
-        return self._predicted_humidity
+        return self._temp
 
-    @predicted_humidity.setter
-    def predicted_humidity(self, predicted_humidity: float):
-        """Sets the predicted_humidity of this InlineResponse2009.
+    @temp.setter
+    def temp(self, temp: float):
+        """Sets the temp of this InlineResponse2009.
 
 
-        :param predicted_humidity: The predicted_humidity of this InlineResponse2009.
-        :type predicted_humidity: float
+        :param temp: The temp of this InlineResponse2009.
+        :type temp: float
         """
 
-        self._predicted_humidity = predicted_humidity
+        self._temp = temp
+
+    @property
+    def wind_kph(self) -> float:
+        """Gets the wind_kph of this InlineResponse2009.
+
+
+        :return: The wind_kph of this InlineResponse2009.
+        :rtype: float
+        """
+        return self._wind_kph
+
+    @wind_kph.setter
+    def wind_kph(self, wind_kph: float):
+        """Sets the wind_kph of this InlineResponse2009.
+
+
+        :param wind_kph: The wind_kph of this InlineResponse2009.
+        :type wind_kph: float
+        """
+
+        self._wind_kph = wind_kph
+
+    @property
+    def humidity(self) -> float:
+        """Gets the humidity of this InlineResponse2009.
+
+
+        :return: The humidity of this InlineResponse2009.
+        :rtype: float
+        """
+        return self._humidity
+
+    @humidity.setter
+    def humidity(self, humidity: float):
+        """Sets the humidity of this InlineResponse2009.
+
+
+        :param humidity: The humidity of this InlineResponse2009.
+        :type humidity: float
+        """
+
+        self._humidity = humidity
+
+    @property
+    def source(self) -> str:
+        """Gets the source of this InlineResponse2009.
+
+
+        :return: The source of this InlineResponse2009.
+        :rtype: str
+        """
+        return self._source
+
+    @source.setter
+    def source(self, source: str):
+        """Sets the source of this InlineResponse2009.
+
+
+        :param source: The source of this InlineResponse2009.
+        :type source: str
+        """
+        allowed_values = ["actual", "forecast"]  # noqa: E501
+        if source not in allowed_values:
+            raise ValueError(
+                "Invalid value for `source` ({0}), must be one of {1}"
+                .format(source, allowed_values)
+            )
+
+        self._source = source

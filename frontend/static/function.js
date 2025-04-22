@@ -39,56 +39,57 @@ document.addEventListener('DOMContentLoaded', function () {
   var calendarEl = document.getElementById('weatherCalendar');
 
   function getConditionStyle(condition) {
-  if (!condition) return {
-    title: '❓',
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    textColor: 'white'
-  };
+    if (!condition) return {
+      title: '❓',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
 
-  condition = condition.toLowerCase();
+    condition = condition.toLowerCase();
 
-  if (condition.includes('sunny')) return {
-    title: '☀️',
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    textColor: 'white'
-  };
+    if (condition.includes('sunny')) return {
+      title: '☀️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
 
-  if (condition.includes('rain')) return {
-    title: '🌧️',
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    textColor: 'white'
-  };
+    if (condition.includes('rain')) return {
+      title: '🌧️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
 
-  if (condition.includes('storm')) return {
-    title: '🌩️',
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    textColor: 'white'
-  };
+    if (condition.includes('storm')) return {
+      title: '🌩️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
 
-  if (condition.includes('cloud')) return {
-    title: '☁️',
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    textColor: 'white'
-  };
+    if (condition.includes('cloud')) return {
+      title: '☁️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
 
-  return {
-    title: '⛅',
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    textColor: 'white'
-  };
-}
-
+    return {
+      title: '⛅',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
+  }
 
   fetch('http://127.0.0.1:8080/laundry-api/v1/forecast-weather-conditions')
     .then(response => response.json())
     .then(data => {
-      const events = data.map(entry => {
+      const forecastData = data;
+
+      const events = forecastData.map(entry => {
         const style = getConditionStyle(entry.predicted_condition);
         return {
           title: style.title,
@@ -96,28 +97,41 @@ document.addEventListener('DOMContentLoaded', function () {
           backgroundColor: style.backgroundColor,
           borderColor: style.borderColor,
           textColor: style.textColor,
-            className: 'weather-icon-event'
+          className: 'weather-icon-event'
         };
       });
 
       const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      headerToolbar: false,
-      dayHeaders: true,
-      height: 'auto',
-      events: events,
-      eventDidMount: function (info) {
-        info.el.style.color = 'white';
-        info.el.style.borderRadius = '6px';
-        info.el.style.fontWeight = 'bold';
-        info.el.style.textAlign = 'center';
-      },
-      dateClick: function (info) {
-      //     modify to add click on calendar, show anything yay :D
-          alert("You clicked on: " + info.dateStr);
-      }
-    });
+        initialView: 'dayGridMonth',
+        headerToolbar: false,
+        dayHeaders: true,
+        height: 'auto',
+        events: events,
+        eventDidMount: function (info) {
+          info.el.style.color = 'white';
+          info.el.style.borderRadius = '6px';
+          info.el.style.fontWeight = 'bold';
+          info.el.style.textAlign = 'center';
+        },
+        dateClick: function (info) {
+          const selectedDate = info.dateStr;
+          const matchedEntry = forecastData.find(entry => entry.date === selectedDate);
 
+          if (matchedEntry) {
+            alert(
+              `📅 Date: ${matchedEntry.date}\n` +
+              `🌤️ Condition: ${matchedEntry.predicted_condition}\n` +
+              `🌡️ Temp: ${matchedEntry.temp}°C\n` +
+              `💧 Humidity: ${matchedEntry.humidity}%\n` +
+              `🌬️ Wind Speed: ${matchedEntry.wind_kph} kph\n` +
+              `🧺 Drying Status: ${matchedEntry.drying_status}\n` +
+              `🕓 Estimated Drying Time: ${matchedEntry.estimated_drying_time_hours} hrs`
+            );
+          } else {
+            alert(`No forecast data for ${selectedDate}`);
+          }
+        }
+      });
 
       calendar.render();
     })

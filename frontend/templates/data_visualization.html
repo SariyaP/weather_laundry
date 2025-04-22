@@ -40,7 +40,6 @@
           <li><strong>Max:</strong> <span id="eda-max">{{ avg }}</span></li>
           <li><strong>Min:</strong> <span id="eda-min">--</span></li>
           <li><strong>Mean:</strong> <span id="eda-mean">--</span></li>
-          <li><strong>Std Dev:</strong> <span id="eda-std">--</span></li>
         </ul>
       </div>
     </div>
@@ -146,7 +145,6 @@
       document.getElementById('eda-max').textContent = max;
       document.getElementById('eda-min').textContent = min;
       document.getElementById('eda-mean').textContent = mean;
-      document.getElementById('eda-std').textContent = std;
     })
     .catch(error => console.error('Error fetching EDA data:', error));
 });
