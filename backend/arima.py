@@ -11,7 +11,6 @@ from pmdarima import auto_arima
 
 matplotlib.use('TkAgg')
 
-# Setup pooled DB connection
 pool = PooledDB(
     creator=pymysql,
     host=DB_HOST,
@@ -28,38 +27,29 @@ def predict_and_combine_humidity():
     conn = pool.connection()
 
     try:
-        # Get all historical data
         query = "SELECT time, humidity FROM api_data ORDER BY time ASC"
         df = pd.read_sql(query, conn)
         df['time'] = pd.to_datetime(df['time'])
         df.set_index('time', inplace=True)
 
-        # Resample hourly (interpolates any missing hours)
         df_hourly = df.resample('H').mean().interpolate()
-
-        # Train on full history
         stepwise_model = auto_arima(df_hourly['humidity'], seasonal=False, trace=False, suppress_warnings=True)
         best_order = stepwise_model.order
 
         model = ARIMA(df_hourly['humidity'], order=best_order)
         model_fit = model.fit()
 
-        # Forecast next 12 hours
         forecast_steps = 12
         forecast_result = model_fit.get_forecast(steps=forecast_steps)
         forecast = forecast_result.predicted_mean
         future_times = pd.date_range(start=df_hourly.index[-1] + pd.Timedelta(hours=1), periods=forecast_steps, freq='H')
 
         df_future = pd.DataFrame({'humidity': forecast.values}, index=future_times)
-
-        # Get last 12 hours of actual data
         df_past_12 = df_hourly.last('12H')
 
-        # Combine for visualization
         combined_df = pd.concat([df_past_12, df_future])
         combined_df['source'] = ['actual'] * len(df_past_12) + ['forecast'] * len(df_future)
 
-        # Plot
         plt.figure(figsize=(12, 6))
         plt.plot(df_past_12.index, df_past_12['humidity'], label='Past 12 Hours (Actual)', marker='o')
         plt.plot(df_future.index, df_future['humidity'], label='Next 12 Hours (Forecast)', color='red', linestyle='--', marker='x')

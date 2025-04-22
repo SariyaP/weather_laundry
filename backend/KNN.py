@@ -64,7 +64,6 @@ def predict_w_condition_next_14_days():
         zero_division=0
     ))
 
-    # 7. Forecast next 14 days for temp, wind_kph, humidity
     forecast_query = "SELECT time, temp, wind_kph, humidity FROM api_data ORDER BY time ASC"
     forecast_df = pd.read_sql(forecast_query, engine)
     forecast_df['time'] = pd.to_datetime(forecast_df['time'])
