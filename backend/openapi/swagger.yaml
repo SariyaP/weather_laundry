@@ -411,7 +411,7 @@ paths:
                   properties:
                     datetime:
                       type: string
-                      example: "2025-04-22 08:00:00"
+                      example: "08:00"
                     temp:
                       type: number
                       example: 32.1
@@ -445,7 +445,7 @@ paths:
                     datetime:
                       type: string
                       format: date-time
-                      example: "2025-04-22 08:00:00"
+                      example: "08:00"
                     temp:
                       type: number
                       example: 30.5

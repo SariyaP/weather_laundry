@@ -683,7 +683,7 @@ components:
       properties:
         datetime:
           type: string
-          example: 2025-04-22 08:00:00
+          example: 08:00
         temp:
           type: number
           example: 32.1
@@ -700,7 +700,7 @@ components:
           - forecast
       example:
         wind_kph: 8.3
-        datetime: 2025-04-22 08:00:00
+        datetime: 08:00
         temp: 32.1
         humidity: 60.5
         source: actual
@@ -763,10 +763,10 @@ components:
           $ref: "#/components/schemas/inline_response_200_13_input"
       example:
         input:
-          wind_kph: 5.962133916683182
-          temp: 6.027456183070403
-          width: 5.637376656633329
-          humidity: 1.4658129805029452
+          wind_kph: 5.962133916683182377482808078639209270477294921875
+          temp: 6.02745618307040320615897144307382404804229736328125
+          width: 5.63737665663332876420099637471139430999755859375
+          humidity: 1.46581298050294517310021547018550336360931396484375
         estimated_drying_time_hours: 0
     inline_response_200_14:
       type: object
@@ -792,12 +792,12 @@ components:
           - Bad
       example:
         date: 2000-01-23
-        wind_kph: 6.027456183070403
-        temp: 0.8008281904610115
-        humidity: 1.4658129805029452
+        wind_kph: 6.02745618307040320615897144307382404804229736328125
+        temp: 0.80082819046101150206595775671303272247314453125
+        humidity: 1.46581298050294517310021547018550336360931396484375
         drying_status: Good
         predicted_condition: predicted_condition
-        estimated_drying_time_hours: 5.962133916683182
+        estimated_drying_time_hours: 5.962133916683182377482808078639209270477294921875
     inline_response_200_13_input:
       type: object
       properties:
@@ -810,8 +810,8 @@ components:
         width:
           type: number
       example:
-        wind_kph: 5.962133916683182
-        temp: 6.027456183070403
-        width: 5.637376656633329
-        humidity: 1.4658129805029452
+        wind_kph: 5.962133916683182377482808078639209270477294921875
+        temp: 6.02745618307040320615897144307382404804229736328125
+        width: 5.63737665663332876420099637471139430999755859375
+        humidity: 1.46581298050294517310021547018550336360931396484375
 
