@@ -66,6 +66,5 @@ def predict_and_combine_humidity():
     finally:
         conn.close()
 
-# Run it
 combined_humidity_df = predict_and_combine_humidity()
 print(combined_humidity_df)
