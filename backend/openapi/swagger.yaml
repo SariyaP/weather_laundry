@@ -393,7 +393,71 @@ paths:
                     predicted_temp:
                       type: number
                       format: float
-
+  /forcast/hourly-avg-and-forecast:
+    get:
+      summary: Get past 12 hours average + next 12 hours forecast
+      operationId: controller.get_api_hourly_avg_and_forecast
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: Success - hourly weather data (actual + forecast)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    datetime:
+                      type: string
+                      example: "08:00"
+                    temp:
+                      type: number
+                      example: 32.1
+                    wind_kph:
+                      type: number
+                      example: 8.3
+                    humidity:
+                      type: number
+                      example: 60.5
+                    source:
+                      type: string
+                      enum: [actual, forecast]
+        '500':
+          description: Internal server error
+  /kidbright-hourly-avg-and-forecast:
+    get:
+      summary: Get past 12 hours and next 12 hours forecast for KidBright sensor data
+      operationId: controller.get_kidbright_hourly_avg_and_forecast
+      tags:
+        - Forecast
+      responses:
+        '200':
+          description: Success - hourly temperature, humidity, and light data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    datetime:
+                      type: string
+                      format: date-time
+                      example: "08:00"
+                    temp:
+                      type: number
+                      example: 30.5
+                    humidity:
+                      type: number
+                      example: 55.4
+                    light:
+                      type: number
+                      example: 280
+                    source:
+                      type: string
+                      enum: [actual, forecast]
   /forecast/humidity:
     get:
       summary: Forecast humidity for the next 14 days

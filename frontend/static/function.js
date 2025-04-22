@@ -39,25 +39,65 @@ document.addEventListener('DOMContentLoaded', function () {
   var calendarEl = document.getElementById('weatherCalendar');
 
   function getConditionStyle(condition) {
-    if (!condition) return { title: 'Unknown', backgroundColor: '#808080' };
+    if (!condition) return {
+      title: '❓',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
 
     condition = condition.toLowerCase();
-    if (condition.includes('sunny')) return { title: '☀️ Sunny', backgroundColor: '#FFD700' };
-    if (condition.includes('rain')) return { title: '🌧️ Rainy', backgroundColor: '#00BFFF' };
-    if (condition.includes('storm')) return { title: '🌩️ Storm', backgroundColor: '#8B0000' };
-    if (condition.includes('cloud')) return { title: '☁️ Cloudy', backgroundColor: '#B0C4DE' };
-    return { title: '⛅ Weather', backgroundColor: '#ADD8E6' };
+
+    if (condition.includes('sunny')) return {
+      title: '☀️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
+
+    if (condition.includes('rain')) return {
+      title: '🌧️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
+
+    if (condition.includes('storm')) return {
+      title: '🌩️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
+
+    if (condition.includes('cloud')) return {
+      title: '☁️',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
+
+    return {
+      title: '⛅',
+      backgroundColor: 'transparent',
+      borderColor: 'transparent',
+      textColor: 'white'
+    };
   }
 
   fetch('http://127.0.0.1:8080/laundry-api/v1/forecast-weather-conditions')
     .then(response => response.json())
     .then(data => {
-      const events = data.map(entry => {
+      const forecastData = data;
+
+      const events = forecastData.map(entry => {
         const style = getConditionStyle(entry.predicted_condition);
         return {
-          title: `${style.title} ${entry.predicted_condition}`,
+          title: style.title,
           date: entry.date,
-          backgroundColor: style.backgroundColor
+          backgroundColor: style.backgroundColor,
+          borderColor: style.borderColor,
+          textColor: style.textColor,
+          className: 'weather-icon-event'
         };
       });
 
@@ -72,6 +112,24 @@ document.addEventListener('DOMContentLoaded', function () {
           info.el.style.borderRadius = '6px';
           info.el.style.fontWeight = 'bold';
           info.el.style.textAlign = 'center';
+        },
+        dateClick: function (info) {
+          const selectedDate = info.dateStr;
+          const matchedEntry = forecastData.find(entry => entry.date === selectedDate);
+
+          if (matchedEntry) {
+            alert(
+              `📅 Date: ${matchedEntry.date}\n` +
+              `🌤️ Condition: ${matchedEntry.predicted_condition}\n` +
+              `🌡️ Temp: ${matchedEntry.temp}°C\n` +
+              `💧 Humidity: ${matchedEntry.humidity}%\n` +
+              `🌬️ Wind Speed: ${matchedEntry.wind_kph} kph\n` +
+              `🧺 Drying Status: ${matchedEntry.drying_status}\n` +
+              `🕓 Estimated Drying Time: ${matchedEntry.estimated_drying_time_hours} hrs`
+            );
+          } else {
+            alert(`No forecast data for ${selectedDate}`);
+          }
         }
       });
 

@@ -2,95 +2,300 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5 pt-5">
-  <h2 class="text-white text-center mb-4">Last 24 Hours Weather Trends</h2>
+    <nav class="navbar navbar-expand-lg transparent-background fixed-top px-3">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white display-4">Weather & Laundry</a>
+    <div class="ms-auto">
+      <button class="btn btn-outline-0 text-white" onclick="window.location.href='/'">
+        <i class="bi bi-house"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="container mt-3 pt-3 my-4">
+  <h2 class="text-white text-center mb-4">API Data Trend and Prediction</h2>
   
   <div class="d-flex justify-content-center mb-3">
-    <select id="metricSelector" class="form-select" style="max-width: 250px;">
-      <option value="temp">Temperature (°C)</option>
-      <option value="humidity">Humidity (%)</option>
-      <option value="wind">Wind Speed (kph)</option>
+    <select id="metricSelector" class="form-select transparent-background text-white" style="max-width: 250px;">
+      <option class="text-black" value="temp">Temperature (°C)</option>
+      <option class="text-black" value="humidity">Humidity (%)</option>
+      <option class="text-black" value="wind">Wind Speed (kph)</option>
     </select>
   </div>
+<div class="row px-3">
+  <!-- Left Column: Chart -->
+  <div class="col-md-8 mb-4">
+    <div class="card transparent-background round border-0 h-100">
+      <div class="card-body">
+        <canvas id="weatherChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
 
-  <div class="card transparent-background round border-0">
-    <div class="card-body">
-      <canvas id="weatherChart" height="100"></canvas>
+  <div class="col-md-4 mb-4">
+    <div class="card transparent-background round border-0 h-100">
+      <div class="card-body text-white">
+        <h5 class="card-title mb-3">Statistics</h5>
+        <ul class="list-unstyled small">
+          <li><strong>Max:</strong> <span id="eda-max">{{ avg }}</span></li>
+          <li><strong>Min:</strong> <span id="eda-min">--</span></li>
+          <li><strong>Mean:</strong> <span id="eda-mean">--</span></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
 
+<div class="container mt-3 pt-3 my-4">
+  <h2 class="text-white text-center mb-4">IoT Data Trend and Prediction</h2>
+
+  <div class="d-flex justify-content-center mb-3">
+    <select id="iotMetricSelector" class="form-select transparent-background text-white" style="max-width: 250px;">
+      <option class="text-black" value="temp">Temperature (°C)</option>
+      <option class="text-black" value="humidity">Humidity (%)</option>
+      <option class="text-black" value="light">Light</option>
+    </select>
+  </div>
+
+  <div class="row px-3">
+    <div class="col-md-8 mb-4">
+      <div class="card transparent-background round border-0 h-100">
+        <div class="card-body">
+          <canvas id="iotChart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <div class="card transparent-background round border-0 h-100">
+        <div class="card-body text-white">
+          <h5 class="card-title mb-3">Statistics</h5>
+          <ul class="list-unstyled small">
+            <li><strong>Max:</strong> <span id="iot-max">--</span></li>
+            <li><strong>Min:</strong> <span id="iot-min">--</span></li>
+            <li><strong>Mean:</strong> <span id="iot-mean">--</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   let chartInstance;
+  let cachedData = [];
 
-  function fetchAndRender(metric) {
-    fetch('http://127.0.0.1:8080/laundry-api/v1/api/hourly-avg')
-      .then(response => response.json())
-      .then(data => {
-        const labels = data.map(entry => entry.hour).reverse();
-        let values;
+  function renderChart(metric) {
+    const labels = cachedData.map(entry => entry.datetime).reverse();
+    let values;
 
-        if (metric === "temp") {
-          values = data.map(entry => entry.avg_temp).reverse();
-        } else if (metric === "humidity") {
-          values = data.map(entry => entry.avg_humidity).reverse();
-        } else if (metric === "wind") {
-          values = data.map(entry => entry.avg_wind).reverse();
-        }
+    if (metric === "temp") {
+      values = cachedData.map(entry => entry.temp).reverse();
+    } else if (metric === "humidity") {
+      values = cachedData.map(entry => entry.humidity).reverse();
+    } else if (metric === "wind") {
+      values = cachedData.map(entry => entry.wind_kph).reverse();
+    }
 
-        const datasets = {
-          temp: { label: "Temperature (°C)", borderColor: "#ffcc00" },
-          humidity: { label: "Humidity (%)", borderColor: "#00ccff" },
-          wind: { label: "Wind Speed (kph)", borderColor: "#66ff66" }
-        };
+    const datasets = {
+      temp: { label: "Temperature (°C)", borderColor: "#ffcc00" },
+      humidity: { label: "Humidity (%)", borderColor: "#00ccff" },
+      wind: { label: "Wind Speed (kph)", borderColor: "#66ff66" }
+    };
 
-        const ctx = document.getElementById('weatherChart').getContext('2d');
+    const ctx = document.getElementById('weatherChart').getContext('2d');
 
-        if (chartInstance) chartInstance.destroy();
+    if (chartInstance) chartInstance.destroy();
 
-        chartInstance = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: datasets[metric].label,
-              data: values,
-              borderColor: datasets[metric].borderColor,
-              fill: false,
-              tension: 0.3,
-              pointRadius: 4,
-              pointHoverRadius: 6
-            }]
+    chartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: datasets[metric].label,
+          data: values,
+          borderColor: datasets[metric].borderColor,
+          fill: false,
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: "white" }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: "white" },
+            title: {
+              display: true,
+              text: 'Hour of Day',
+              color: 'white'
+            }
           },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                labels: { color: "white" }
-              }
-            },
-            scales: {
-              x: {
-                ticks: { color: "white" }
-              },
-              y: {
-                ticks: { color: "white" }
-              }
+          y: {
+            ticks: { color: "white" },
+            title: {
+              display: true,
+              text: datasets[metric].label,
+              color: 'white'
             }
           }
-        });
-      })
-      .catch(err => console.error("Failed to fetch data:", err));
+        }
+      }
+    });
+  }
+
+  function updateStatistics(metric) {
+    let values;
+    if (metric === "temp") {
+      values = cachedData.map(entry => entry.temp);
+    } else if (metric === "humidity") {
+      values = cachedData.map(entry => entry.humidity);
+    } else if (metric === "wind") {
+      values = cachedData.map(entry => entry.wind_kph);
+    }
+
+    const max = Math.max(...values).toFixed(1);
+    const min = Math.min(...values).toFixed(1);
+    const mean = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1);
+
+    document.getElementById('eda-max').textContent = max;
+    document.getElementById('eda-min').textContent = min;
+    document.getElementById('eda-mean').textContent = mean;
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     const selector = document.getElementById('metricSelector');
-    fetchAndRender(selector.value);
 
-    selector.addEventListener('change', () => {
-      fetchAndRender(selector.value);
+    // Fetch once and store
+    fetch('http://127.0.0.1:8080/laundry-api/v1/forcast/hourly-avg-and-forecast')
+      .then(response => response.json())
+      .then(data => {
+        cachedData = data;
+
+        renderChart(selector.value);
+        updateStatistics(selector.value);
+
+        selector.addEventListener('change', () => {
+          renderChart(selector.value);
+          updateStatistics(selector.value);
+        });
+      })
+      .catch(err => console.error("Failed to fetch data:", err));
+  });
+  let iotChartInstance;
+  let iotData = [];
+
+  function renderIotChart(metric) {
+    const labels = iotData.map(entry => entry.datetime).reverse();
+    let values;
+
+    if (metric === "temp") {
+      values = iotData.map(entry => entry.temp).reverse();
+    } else if (metric === "humidity") {
+      values = iotData.map(entry => entry.humidity).reverse();
+    } else if (metric === "light") {
+      values = iotData.map(entry => entry.light).reverse();
+    }
+
+    const datasets = {
+      temp: { label: "Temperature (°C)", borderColor: "#ff9999" },
+      humidity: { label: "Humidity (%)", borderColor: "#9999ff" },
+      light: { label: "Light", borderColor: "#ffff66" }
+    };
+
+    const ctx = document.getElementById('iotChart').getContext('2d');
+
+    if (iotChartInstance) iotChartInstance.destroy();
+
+    iotChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: datasets[metric].label,
+          data: values,
+          borderColor: datasets[metric].borderColor,
+          fill: false,
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: "white" }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: "white" },
+            title: {
+              display: true,
+              text: 'Hour of Day',
+              color: 'white'
+            }
+          },
+          y: {
+            ticks: { color: "white" },
+            title: {
+              display: true,
+              text: datasets[metric].label,
+              color: 'white'
+            }
+          }
+        }
+      }
     });
+  }
+
+  function updateIotStatistics(metric) {
+    let values;
+    if (metric === "temp") {
+      values = iotData.map(entry => entry.temp);
+    } else if (metric === "humidity") {
+      values = iotData.map(entry => entry.humidity);
+    } else if (metric === "light") {
+      values = iotData.map(entry => entry.light);
+    }
+
+    const max = Math.max(...values).toFixed(1);
+    const min = Math.min(...values).toFixed(1);
+    const mean = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1);
+
+    document.getElementById('iot-max').textContent = max;
+    document.getElementById('iot-min').textContent = min;
+    document.getElementById('iot-mean').textContent = mean;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const iotSelector = document.getElementById('iotMetricSelector');
+
+    fetch('http://127.0.0.1:8080/laundry-api/v1/kidbright-hourly-avg-and-forecast')
+      .then(response => response.json())
+      .then(data => {
+        iotData = data;
+
+        renderIotChart(iotSelector.value);
+        updateIotStatistics(iotSelector.value);
+
+        iotSelector.addEventListener('change', () => {
+          renderIotChart(iotSelector.value);
+          updateIotStatistics(iotSelector.value);
+        });
+      })
+      .catch(err => console.error("Failed to fetch IoT data:", err));
   });
 </script>
+
 {% endblock %}

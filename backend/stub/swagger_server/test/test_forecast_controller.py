@@ -6,7 +6,9 @@ from flask import json
 from six import BytesIO
 
 from swagger_server.models.inline_response20010 import InlineResponse20010  # noqa: E501
+from swagger_server.models.inline_response20011 import InlineResponse20011  # noqa: E501
 from swagger_server.models.inline_response20012 import InlineResponse20012  # noqa: E501
+from swagger_server.models.inline_response20014 import InlineResponse20014  # noqa: E501
 from swagger_server.models.inline_response2008 import InlineResponse2008  # noqa: E501
 from swagger_server.models.inline_response2009 import InlineResponse2009  # noqa: E501
 from swagger_server.test import BaseTestCase
@@ -44,6 +46,28 @@ class TestForecastController(BaseTestCase):
         """
         response = self.client.open(
             '/laundry-api/v1/forecast/temperature',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_controller_get_api_hourly_avg_and_forecast(self):
+        """Test case for controller_get_api_hourly_avg_and_forecast
+
+        Get past 12 hours average + next 12 hours forecast
+        """
+        response = self.client.open(
+            '/laundry-api/v1/forcast/hourly-avg-and-forecast',
+            method='GET')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_controller_get_kidbright_hourly_avg_and_forecast(self):
+        """Test case for controller_get_kidbright_hourly_avg_and_forecast
+
+        Get past 12 hours and next 12 hours forecast for KidBright sensor data
+        """
+        response = self.client.open(
+            '/laundry-api/v1/kidbright-hourly-avg-and-forecast',
             method='GET')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))

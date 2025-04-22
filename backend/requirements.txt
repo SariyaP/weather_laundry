@@ -7,3 +7,4 @@ scikit-learn
 sqlalchemy
 statsmodels
 cryptography
+flask_cors

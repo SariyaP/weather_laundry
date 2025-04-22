@@ -14,25 +14,40 @@ class InlineResponse20010(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, _date: date=None, predicted_light: float=None):  # noqa: E501
+    def __init__(self, _datetime: datetime=None, temp: float=None, humidity: float=None, light: float=None, source: str=None):  # noqa: E501
         """InlineResponse20010 - a model defined in Swagger
 
-        :param _date: The _date of this InlineResponse20010.  # noqa: E501
-        :type _date: date
-        :param predicted_light: The predicted_light of this InlineResponse20010.  # noqa: E501
-        :type predicted_light: float
+        :param _datetime: The _datetime of this InlineResponse20010.  # noqa: E501
+        :type _datetime: datetime
+        :param temp: The temp of this InlineResponse20010.  # noqa: E501
+        :type temp: float
+        :param humidity: The humidity of this InlineResponse20010.  # noqa: E501
+        :type humidity: float
+        :param light: The light of this InlineResponse20010.  # noqa: E501
+        :type light: float
+        :param source: The source of this InlineResponse20010.  # noqa: E501
+        :type source: str
         """
         self.swagger_types = {
-            '_date': date,
-            'predicted_light': float
+            '_datetime': datetime,
+            'temp': float,
+            'humidity': float,
+            'light': float,
+            'source': str
         }
 
         self.attribute_map = {
-            '_date': 'date',
-            'predicted_light': 'predicted_light'
+            '_datetime': 'datetime',
+            'temp': 'temp',
+            'humidity': 'humidity',
+            'light': 'light',
+            'source': 'source'
         }
-        self.__date = _date
-        self._predicted_light = predicted_light
+        self.__datetime = _datetime
+        self._temp = temp
+        self._humidity = humidity
+        self._light = light
+        self._source = source
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse20010':
@@ -46,43 +61,112 @@ class InlineResponse20010(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def _date(self) -> date:
-        """Gets the _date of this InlineResponse20010.
+    def _datetime(self) -> datetime:
+        """Gets the _datetime of this InlineResponse20010.
 
 
-        :return: The _date of this InlineResponse20010.
-        :rtype: date
+        :return: The _datetime of this InlineResponse20010.
+        :rtype: datetime
         """
-        return self.__date
+        return self.__datetime
 
-    @_date.setter
-    def _date(self, _date: date):
-        """Sets the _date of this InlineResponse20010.
+    @_datetime.setter
+    def _datetime(self, _datetime: datetime):
+        """Sets the _datetime of this InlineResponse20010.
 
 
-        :param _date: The _date of this InlineResponse20010.
-        :type _date: date
+        :param _datetime: The _datetime of this InlineResponse20010.
+        :type _datetime: datetime
         """
 
-        self.__date = _date
+        self.__datetime = _datetime
 
     @property
-    def predicted_light(self) -> float:
-        """Gets the predicted_light of this InlineResponse20010.
+    def temp(self) -> float:
+        """Gets the temp of this InlineResponse20010.
 
 
-        :return: The predicted_light of this InlineResponse20010.
+        :return: The temp of this InlineResponse20010.
         :rtype: float
         """
-        return self._predicted_light
+        return self._temp
 
-    @predicted_light.setter
-    def predicted_light(self, predicted_light: float):
-        """Sets the predicted_light of this InlineResponse20010.
+    @temp.setter
+    def temp(self, temp: float):
+        """Sets the temp of this InlineResponse20010.
 
 
-        :param predicted_light: The predicted_light of this InlineResponse20010.
-        :type predicted_light: float
+        :param temp: The temp of this InlineResponse20010.
+        :type temp: float
         """
 
-        self._predicted_light = predicted_light
+        self._temp = temp
+
+    @property
+    def humidity(self) -> float:
+        """Gets the humidity of this InlineResponse20010.
+
+
+        :return: The humidity of this InlineResponse20010.
+        :rtype: float
+        """
+        return self._humidity
+
+    @humidity.setter
+    def humidity(self, humidity: float):
+        """Sets the humidity of this InlineResponse20010.
+
+
+        :param humidity: The humidity of this InlineResponse20010.
+        :type humidity: float
+        """
+
+        self._humidity = humidity
+
+    @property
+    def light(self) -> float:
+        """Gets the light of this InlineResponse20010.
+
+
+        :return: The light of this InlineResponse20010.
+        :rtype: float
+        """
+        return self._light
+
+    @light.setter
+    def light(self, light: float):
+        """Sets the light of this InlineResponse20010.
+
+
+        :param light: The light of this InlineResponse20010.
+        :type light: float
+        """
+
+        self._light = light
+
+    @property
+    def source(self) -> str:
+        """Gets the source of this InlineResponse20010.
+
+
+        :return: The source of this InlineResponse20010.
+        :rtype: str
+        """
+        return self._source
+
+    @source.setter
+    def source(self, source: str):
+        """Sets the source of this InlineResponse20010.
+
+
+        :param source: The source of this InlineResponse20010.
+        :type source: str
+        """
+        allowed_values = ["actual", "forecast"]  # noqa: E501
+        if source not in allowed_values:
+            raise ValueError(
+                "Invalid value for `source` ({0}), must be one of {1}"
+                .format(source, allowed_values)
+            )
+
+        self._source = source

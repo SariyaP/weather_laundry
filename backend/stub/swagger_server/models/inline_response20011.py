@@ -6,7 +6,6 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
-from swagger_server.models.inline_response20011_input import InlineResponse20011Input  # noqa: F401,E501
 from swagger_server import util
 
 
@@ -15,25 +14,25 @@ class InlineResponse20011(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, estimated_drying_time_hours: int=None, input: InlineResponse20011Input=None):  # noqa: E501
+    def __init__(self, _date: date=None, predicted_humidity: float=None):  # noqa: E501
         """InlineResponse20011 - a model defined in Swagger
 
-        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20011.  # noqa: E501
-        :type estimated_drying_time_hours: int
-        :param input: The input of this InlineResponse20011.  # noqa: E501
-        :type input: InlineResponse20011Input
+        :param _date: The _date of this InlineResponse20011.  # noqa: E501
+        :type _date: date
+        :param predicted_humidity: The predicted_humidity of this InlineResponse20011.  # noqa: E501
+        :type predicted_humidity: float
         """
         self.swagger_types = {
-            'estimated_drying_time_hours': int,
-            'input': InlineResponse20011Input
+            '_date': date,
+            'predicted_humidity': float
         }
 
         self.attribute_map = {
-            'estimated_drying_time_hours': 'estimated_drying_time_hours',
-            'input': 'input'
+            '_date': 'date',
+            'predicted_humidity': 'predicted_humidity'
         }
-        self._estimated_drying_time_hours = estimated_drying_time_hours
-        self._input = input
+        self.__date = _date
+        self._predicted_humidity = predicted_humidity
 
     @classmethod
     def from_dict(cls, dikt) -> 'InlineResponse20011':
@@ -47,43 +46,43 @@ class InlineResponse20011(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def estimated_drying_time_hours(self) -> int:
-        """Gets the estimated_drying_time_hours of this InlineResponse20011.
+    def _date(self) -> date:
+        """Gets the _date of this InlineResponse20011.
 
 
-        :return: The estimated_drying_time_hours of this InlineResponse20011.
-        :rtype: int
+        :return: The _date of this InlineResponse20011.
+        :rtype: date
         """
-        return self._estimated_drying_time_hours
+        return self.__date
 
-    @estimated_drying_time_hours.setter
-    def estimated_drying_time_hours(self, estimated_drying_time_hours: int):
-        """Sets the estimated_drying_time_hours of this InlineResponse20011.
+    @_date.setter
+    def _date(self, _date: date):
+        """Sets the _date of this InlineResponse20011.
 
 
-        :param estimated_drying_time_hours: The estimated_drying_time_hours of this InlineResponse20011.
-        :type estimated_drying_time_hours: int
+        :param _date: The _date of this InlineResponse20011.
+        :type _date: date
         """
 
-        self._estimated_drying_time_hours = estimated_drying_time_hours
+        self.__date = _date
 
     @property
-    def input(self) -> InlineResponse20011Input:
-        """Gets the input of this InlineResponse20011.
+    def predicted_humidity(self) -> float:
+        """Gets the predicted_humidity of this InlineResponse20011.
 
 
-        :return: The input of this InlineResponse20011.
-        :rtype: InlineResponse20011Input
+        :return: The predicted_humidity of this InlineResponse20011.
+        :rtype: float
         """
-        return self._input
+        return self._predicted_humidity
 
-    @input.setter
-    def input(self, input: InlineResponse20011Input):
-        """Sets the input of this InlineResponse20011.
+    @predicted_humidity.setter
+    def predicted_humidity(self, predicted_humidity: float):
+        """Sets the predicted_humidity of this InlineResponse20011.
 
 
-        :param input: The input of this InlineResponse20011.
-        :type input: InlineResponse20011Input
+        :param predicted_humidity: The predicted_humidity of this InlineResponse20011.
+        :type predicted_humidity: float
         """
 
-        self._input = input
+        self._predicted_humidity = predicted_humidity
