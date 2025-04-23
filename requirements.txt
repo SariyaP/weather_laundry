@@ -1,4 +1,4 @@
--r stub/requirements.txt
+-r backend/stub/requirements.txt
 DBUtils
 PyMySQL
 connexion<3.0.0

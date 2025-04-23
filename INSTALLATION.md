@@ -44,6 +44,7 @@ Go to the baackend directory
 ```bash
 cd backend
 ```
+##### Create config.py. Template is inside config.py.example
 Run the app.py
 ```bash
 python app.py
@@ -68,6 +69,16 @@ cd ..
 Go to the frontend directory
 ```bash
 cd frontend
+```
+##### Create an .env file Template is inside .env.example
+Get Django secret key
+```bash
+python manage.py shell
+```
+Enter this code inside the shell
+```bash
+from django.core.management.utils import get_random_secret_key  
+get_random_secret_key()
 ```
 Run Django
 ```bash
